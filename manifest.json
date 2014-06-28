@@ -1,0 +1,30 @@
+{
+  "name": "__MSG_appName__",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "__MSG_appDescription__",
+  "icons": {
+    "16": "images/icon-16.png",
+    "19": "images/icon-19.png",
+    "38": "images/icon-38.png",
+    "128": "images/icon-128.png"
+  },
+  "default_locale": "en",
+  "background": {
+    "scripts": [
+      "scripts/libs/underscore-min.js",
+      "scripts/background.js"
+    ]
+  },
+  "permissions": ["<all_urls>"],
+  "web_accessible_resources": [
+    "scripts/libs/MockHttpRequest.js",
+    "scripts/libs/CustomEventServer.js",
+    "scripts/injected.js"
+  ],
+  "browser_action": {
+    "default_icon": "images/icon-38.png",
+    "default_title": "Start learning"
+  },
+  "options_page": "options_page/dist/index.html"
+}

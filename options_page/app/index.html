@@ -1,0 +1,69 @@
+<!doctype html>
+<html ng-app="optionsPage" ng-csp="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>optionsPage</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!-- TODO: -->
+    <!--<link rel="shortcut icon" sizes="196x196" href="assets/images/icon.png">-->
+
+    <!--INJECT STYLES-->
+    <link rel="stylesheet" href="styles/main.css">
+    <!--/INJECT STYLES-->
+
+  </head>
+  <body>
+
+    <div class="site-loading" ng-show="false">
+        <div class="spinner"></div>
+    </div>
+
+    <div id="root" class="ng-cloak">
+
+        <navbar-component></navbar-component>
+        <div ui-view class="view-change-animation"></div>
+
+    </div>
+
+    <!--INJECT SCRIPTS-->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-mocks/angular-mocks.js"></script>
+    <script src="bower_components/lodash/dist/lodash.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-component-factory/angular-component-factory.js"></script>
+    <script src="bower_components/angular-loading-bar/build/loading-bar.js"></script>
+    <script src="bower_components/angular-busy/dist/angular-busy.js"></script>
+    <script src="bower_components/angular-promise-tracker/promise-tracker.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/angular-ui-bootstrap-bower/ui-bootstrap.js"></script>
+    <script src="bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js"></script>
+    <script src="bower_components/ng-symbiosis-utils/ng-symbiosis-utils.src.js"></script>
+    <script src="bower_components/ng-symbiosis-routeprovider/ng-symbiosis-routeprovider.src.js"></script>
+    <script src="bower_components/ng-symbiosis-repository/ng-symbiosis-repository.src.js"></script>
+    <script src="bower_components/ng-symbiosis-model/ng-symbiosis-model.src.js"></script>
+    <script src="bower_components/log/log.js"></script>
+    <script src="scripts/deepExtend.js"></script>
+    <script src="scripts/module.js"></script>
+    <script src="config/local.js"></script>
+    <script src="config/config.js"></script>
+    <script src="config/routes.js"></script>
+    <script src="components/header-list/header-list.js"></script>
+    <script src="components/mock-form/mock-form.js"></script>
+    <script src="components/navbar/navbar.js"></script>
+    <script src="states/domain/index/domain-controller.js"></script>
+    <script src="states/error/index/error.js"></script>
+    <script src="states/index/index/index.js"></script>
+    <script src="scripts/log.js"></script>
+    <script src="scripts/models/mock.js"></script>
+    <script src="scripts/repositories/mock-repository.js"></script>
+    <script src="scripts/utils/lodash.js"></script>
+    <!--/INJECT SCRIPTS-->
+
+  </body>
+</html>

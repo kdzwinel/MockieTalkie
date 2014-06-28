@@ -1,0 +1,16 @@
+<div class="domain-state container">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h2>{{domain}}</h2>
+            <p>List of all mocked AJAX calls to "{{domain}}" domain.</p>
+
+            <accordion close-others="true">
+                <accordion-group heading="{{mock.requestMethod}} {{shortURL(mock.requestURL)}}" ng-repeat="mock in mocks">
+                    <mock-form-component mock="mock"></mock-form-component>
+                </accordion-group>
+            </accordion>
+        </div>
+    </div>
+
+</div>

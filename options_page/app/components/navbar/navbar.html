@@ -1,0 +1,30 @@
+<header class="navbar-component navbar navbar-inverse navbar-fixed-top" role="banner">
+    <div class="container">
+        <div class="navbar-header">
+            <button class="navbar-toggle" type="button" ng-init="isCollapsed=true" ng-click="isCollapsed=!isCollapsed">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a ui-sref="index" class="navbar-brand"><img src="assets/images/logo/horizontal.png" alt="WalkieTalkie" /></a>
+        </div>
+        <nav class="collapse navbar-collapse nsb-navbar-collapse" role="navigation" collapse="isCollapsed">
+            <ul class="nav navbar-nav">
+                <li ui-sref-active="active">
+                    <a ui-sref="index">List of domains</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a ui-sref="error">About</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a ui-sref="error">Help</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>

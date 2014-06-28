@@ -1,0 +1,37 @@
+.navbar-component {
+  //https://kuler.adobe.com/create/color-wheel/?base=2&rule=Complementary&selected=3&name=My%20Kuler%20Theme&mode=rgb&rgbvalues=0.7,0.3113543245219098,0.029651352048303357,1,0.5273269114989251,0.18471814870943815,1,0.4693502635761423,0.08471814870943817,0,0.6358453772703342,0.7,0.08471814870943817,0.9161149116273485,1&swatchOrder=0,1,2,3,4
+  background-color: #B24F08;
+  border-color: #FF7816;
+  border-bottom-width: 5px;
+
+  .navbar-nav > li > a {
+    color: #00A2B2;
+    padding-top: 24px;
+    padding-bottom: 6px;
+  }
+
+  .navbar-nav > .active > a, .navbar-nav > .active > a:hover, .navbar-nav > .active > a:focus {
+    background-color: #00A2B2;
+  }
+
+  .navbar-brand {
+    padding-top: 0;
+    padding-bottom: 0;
+    img {
+      padding: 3px;
+      height: 50px;
+    }
+  }
+
+  .navbar-toggle {
+    border-color: #FF7816;
+  }
+
+  .navbar-toggle:hover, .navbar-toggle:focus {
+    background-color: #FF7816;
+  }
+
+  .navbar-collapse, .navbar-form {
+    border-color: #FF7816;
+  }
+}

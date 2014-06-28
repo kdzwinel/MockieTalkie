@@ -1,0 +1,24 @@
+<div class="index-state container">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h1>Domains</h1>
+            <p>Your mocks are grouped by domain for convenience.</p>
+
+            <div class="panel panel-default" ng-repeat="domain in domains">
+                <div class="panel-heading" ng-click="manageDomainMocks(domain)">
+                    <h3 class="panel-title">{{domain.name}} <span class="badge">{{domain.count}}</span></h3>
+                </div>
+                <div class="panel-body">
+                    <button type="button" class="btn btn-default btn-xs">
+                        <span class="glyphicon glyphicon-export"></span> Export
+                    </button>
+                    <button type="button" class="btn btn-danger btn-xs">
+                        <span class="glyphicon glyphicon-remove"></span> Remove
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
