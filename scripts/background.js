@@ -19,9 +19,9 @@ function startLearning(tabId) {
 
   chrome.tabs.executeScript(tabId, {code: 'startLearning()'});
 
-  chrome.browserAction.setIcon({tabId: tabId, path: "images/icon-38.png"});
-  chrome.browserAction.setBadgeText({tabId: tabId, text: "learn"});
-  chrome.browserAction.setBadgeBackgroundColor({tabId: tabId, color: '#FF7816'});
+  chrome.browserAction.setIcon({tabId: tabId, path: {
+    38: "images/icon-38-learning.png"
+  }});
   chrome.browserAction.setTitle({tabId: tabId, title: "Start mocking API callas"});
 }
 
@@ -30,9 +30,9 @@ function startMocking(tabId) {
 
   chrome.tabs.executeScript(tabId, {code: 'startMocking()'});
 
-  chrome.browserAction.setIcon({tabId: tabId, path: "images/icon-38.png"});
-  chrome.browserAction.setBadgeText({tabId: tabId, text: "mock"});
-  chrome.browserAction.setBadgeBackgroundColor({tabId: tabId, color: '#00A2B2'});
+  chrome.browserAction.setIcon({tabId: tabId, path: {
+    38: "images/icon-38-mocking.png"
+  }});
   chrome.browserAction.setTitle({tabId: tabId, title: "Stop"});
 }
 
@@ -43,8 +43,9 @@ function stop(tabId) {
     code: 'stop()'
   });
 
-  chrome.browserAction.setIcon({tabId: tabId, path: "images/icon-38.png"});
-  chrome.browserAction.setBadgeText({tabId: tabId, text: ""});
+  chrome.browserAction.setIcon({tabId: tabId, path: {
+    38: "images/icon-38.png"
+  }});
   chrome.browserAction.setTitle({tabId: tabId, title: "Start learning API calls"});
 }
 
