@@ -7,7 +7,9 @@
 
             <div class="panel panel-default" ng-repeat="domain in domains">
                 <div class="panel-heading" ng-click="manageDomainMocks(domain)">
-                    <h3 class="panel-title">{{domain.name}} <span class="badge">{{domain.count}}</span></h3>
+                    <h3 class="panel-title">{{domain.name}} - <span class="entriescount">
+                        <ng-pluralize count="domain.count" when="{'1': 'one entry', 'other': '{} entries'}"></ng-pluralize>
+                    </span></h3>
                 </div>
                 <div class="panel-body">
                     <button type="button" class="btn btn-default btn-xs">

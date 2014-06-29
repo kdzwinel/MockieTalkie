@@ -8,7 +8,7 @@
             <accordion close-others="true">
                 <accordion-group ng-repeat="mock in mocks">
                     <accordion-heading>
-                        <strong>{{mock.requestMethod}}</strong> {{shortURL(mock.requestURL)}}
+                        <strong>{{mock.requestMethod}}</strong> {{mock.getURLPart('pathname')}}<span class="urlpath">{{mock.getURLPart('search')}}{{mock.getURLPart('hash')}}</span>
                     </accordion-heading>
                     <mock-form-component mock="mock"></mock-form-component>
                 </accordion-group>

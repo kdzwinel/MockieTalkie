@@ -10,6 +10,25 @@ angular.module('optionsPage')
     }
 
     MockModel.prototype = Object.create(BaseModel.prototype);
+
+    MockModel.prototype.getURLParts = function() {
+      var a = document.createElement('a');
+      a.href = this.requestURL;
+
+      return {
+        protocol: a.protocol,
+        domain: a.domain,
+        port: a.port,
+        pathname: a.pathname,
+        search: a.search,
+        hash: a.hash
+      };
+    };
+
+    MockModel.prototype.getURLPart = function(partName) {
+      return (this.getURLParts())[partName];
+    };
+
     MockModel.prototype.$save = function() {
       var defer = $q.defer();
 
