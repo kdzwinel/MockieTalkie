@@ -2,17 +2,17 @@
     <tabset>
         <tab heading="Request">
             <div class="form-group">
+                <label for="mock_{{mock.id}}_method" class="col-sm-2 control-label">Method</label>
+
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="mock_{{mock.id}}_method" ng-model="mock.requestMethod" typeahead="method for method in methodsHTTP | filter:$viewValue | limitTo:8" ng-blur="mock.$save()">
+                </div>
+            </div>
+            <div class="form-group">
                 <label for="mock_{{mock.id}}_url" class="col-sm-2 control-label">Full URL</label>
 
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="mock_{{mock.id}}_url" ng-model="mock.requestURL" ng-blur="mock.$save()">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="mock_{{mock.id}}_method" class="col-sm-2 control-label">Method</label>
-
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="mock_{{mock.id}}_method" ng-model="mock.requestMethod" ng-blur="mock.$save()">
                 </div>
             </div>
         </tab>
