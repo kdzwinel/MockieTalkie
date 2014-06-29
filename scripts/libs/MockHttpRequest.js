@@ -450,18 +450,18 @@ MockHttpServer.prototype = {
     var self = this;
 
     function Request () {
-      this.realRequest = new window.OriginalHttpRequest();
+      var orgReq = new OriginalHttpRequest();
 
       var orgOpen = this.open;
       this.open = function() {
-        this.realRequest.open.apply(this.realRequest, arguments);
+        orgReq.open.apply(orgReq, arguments);
         orgOpen.apply(this, arguments);
       };
 
-      var orgSetHeaders = this.setRequestHeader;
+      var orgSetRequestHeaders = this.setRequestHeader;
       this.setRequestHeader = function() {
-        this.realRequest.setRequestHeader.apply(this.realRequest, arguments);
-        orgSetHeaders.apply(this, arguments);
+        orgReq.setRequestHeader.apply(orgReq, arguments);
+        orgSetRequestHeaders.apply(this, arguments);
       };
 
       this.onsend = function () {
@@ -469,14 +469,17 @@ MockHttpServer.prototype = {
       };
 
       this.pass = function() {
-        this.realRequest.addEventListener("load", function(request) {
+        orgReq.addEventListener("load", function(request) {
+          this.responseHeaders = {
+            'content-type': orgReq.getResponseHeader('content-type')
+          };
           this.receive(request.target.status, request.target.responseText);
         }.bind(this), false);
-        this.realRequest.addEventListener("error", this.err, false);
+        orgReq.addEventListener("error", this.err, false);
 //        oReq.addEventListener("progress", this.onprogress, false);
 //        oReq.addEventListener("abort", this.onabort, false);
 
-        this.realRequest.send();
+        orgReq.send(this.requestText);
       };
 
       MockHttpRequest.apply(this, arguments);
