@@ -80,6 +80,10 @@ function generateMockId(data) {
   return [data.requestMethod, data.requestURL].join('_');
 }
 
+function escapeRegExp(str) {
+  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+}
+
 //Saving and retrieving mocks
 chrome.runtime.onMessage.addListener(function(request, sender, response){
   //don't respond to calls from other extensions
@@ -98,13 +102,32 @@ chrome.runtime.onMessage.addListener(function(request, sender, response){
     console.log('save_mock', request, JSON.parse(localStorage[mock.id]));
     response();
   } else if(request.message === 'get_mock') {
-    var mockId = generateMockId(request.data);
-    if(localStorage[mockId]) {
-      console.log('get_mock', request, JSON.parse(localStorage[mockId]));
-      response(localStorage[mockId]);
-    } else {
-      response(undefined);
+    var match = null,
+      method = request.data.requestMethod,
+      url = request.data.requestURL;
+
+    for(var idx in localStorage) {
+      var item = JSON.parse(localStorage[idx]);
+
+      if(method.toLowerCase() === (item.requestMethod).toLowerCase()) {
+
+        //check for wildcard
+        if((item.requestURL).indexOf('{{*}}') !== -1){
+          var regexp = new RegExp('^' + escapeRegExp(item.requestURL).replace(/\\\{\\\{\\\*\\\}\\\}/g, '(.*)') + '$');
+
+          if(regexp.test(url)) {
+            match = item;
+            break;
+          }
+        } else if(item.requestURL === url) {
+          match = item;
+          break;
+        }
+      }
     }
+
+    console.log('get_mock', request, match);
+    response(match);
   } else if(request.message === 'get_all_mocks') {
     console.log('get_all_mocks', request);
     var mocksArray = [];

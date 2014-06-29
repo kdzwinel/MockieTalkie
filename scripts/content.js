@@ -79,8 +79,6 @@
           requestId: data.requestId
         });
       } else {
-        mock = JSON.parse(mock);
-
         eventServer.sendMessage('request_mock', {
           requestId: data.requestId,
           requestURL: data.requestURL,
