@@ -11,8 +11,8 @@
   "background": {
     "scripts": [
       "scripts/libs/underscore-min.js",
-      "scripts/background.js",
-      "scripts/mock-storage.js"
+      "scripts/libs/MockStorage.js",
+      "scripts/background.js"
     ]
   },
   "permissions": ["<all_urls>", "storage", "unlimitedStorage"],

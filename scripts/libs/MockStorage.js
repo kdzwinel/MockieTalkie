@@ -80,22 +80,3 @@ function MockStorage() {
     console.log('save_mock', mock);
   };
 }
-
-var mockStorage = new MockStorage();
-
-//Saving and retrieving mocks
-chrome.runtime.onMessage.addListener(function (request, sender, response) {
-  //don't respond to calls from other extensions
-  if (sender.id !== chrome.runtime.id) {
-    return;
-  }
-
-  request = JSON.parse(request);
-
-  if (request.message === 'save_mock') {
-    var mock = request.data;
-    mockStorage.save(mock, response);
-  } else if (request.message === 'get_matching_mock') {
-    mockStorage.match(request.data, response);
-  }
-});
