@@ -47,5 +47,8 @@ angular.module('optionsPage')
       return defer.promise;
     };
 
+    MockModel.prototype.$delete = function() {
+    };
+
     return MockModel;
   });

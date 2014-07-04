@@ -11,10 +11,11 @@
   "background": {
     "scripts": [
       "scripts/libs/underscore-min.js",
-      "scripts/background.js"
+      "scripts/background.js",
+      "scripts/mock-storage.js"
     ]
   },
-  "permissions": ["<all_urls>"],
+  "permissions": ["<all_urls>", "storage", "unlimitedStorage"],
   "web_accessible_resources": [
     "scripts/libs/MockHttpRequest.js",
     "scripts/libs/CustomEventServer.js",

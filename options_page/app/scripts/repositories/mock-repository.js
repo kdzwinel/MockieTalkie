@@ -10,6 +10,15 @@ angular.module('optionsPage')
 
     var MockRepository = function () {
       this._mocks = null;
+
+      //reload data after change
+      chrome.storage.onChanged.addListener(function(change, storage) {
+        if(storage === 'local' && change.mocks && change.mocks.newValue) {
+          this._mocks = (change.mocks.newValue).map(function(rawMock){
+            return new MockModel(rawMock);
+          });
+        }
+      }.bind(this));
     };
 
     MockRepository.prototype.getMocksByDomain = function (domain) {
@@ -61,13 +70,9 @@ angular.module('optionsPage')
       var defer = $q.defer();
 
       if (!this._mocks) {
-        var json = JSON.stringify({
-          message: 'get_all_mocks'
-        });
-        chrome.runtime.sendMessage(json, function (mocks) {
-          mocks = mocks || [];
-          this._mocks = mocks.map(function(mock) {
-            return new MockModel(mock);
+        chrome.storage.local.get('mocks', function(data) {
+          this._mocks = (data.mocks).map(function(rawMock){
+            return new MockModel(rawMock);
           });
           defer.resolve(this._mocks);
         }.bind(this));
@@ -76,6 +81,14 @@ angular.module('optionsPage')
       }
 
       return defer.promise;
+    };
+
+    MockRepository.prototype.delete = function(mock) {
+      var idx = this._mocks.indexOf(mock);
+      if(idx > -1) {
+        this._mocks.splice(idx, 1);
+      }
+      chrome.storage.local.set({mocks:this._mocks});
     };
 
     return new MockRepository();

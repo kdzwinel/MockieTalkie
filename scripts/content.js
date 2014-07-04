@@ -8,7 +8,9 @@
   window.contentScriptInjected = true;
 
   //We need to make sure that libraries load before the injected.js script
-  //TODO promises + allow libraries to load in parallel
+  //TODO promises
+  //TODO allow libraries to load in parallel
+  //TODO check for errors
   injectScript('scripts/libs/CustomEventServer.js', function () {
     injectScript('scripts/libs/MockHttpRequest.js', function () {
       injectScript('scripts/injected.js');
@@ -63,7 +65,7 @@
 
   function mockRequest(data) {
     var json = JSON.stringify({
-      message: 'get_mock',
+      message: 'get_matching_mock',
       data: {
         requestMethod: data.method,
         requestURL: data.requestURL,

@@ -10,6 +10,11 @@
                     <accordion-heading>
                         <strong>{{mock.requestMethod}}</strong> {{mock.getURLPart('pathname')}}<span class="urlpath">{{mock.getURLPart('search')}}{{mock.getURLPart('hash')}}</span>
                     </accordion-heading>
+
+                    <p><button type="button" class="btn btn-danger btn-xs" ng-click="removeMock(mock)">
+                        <span class="glyphicon glyphicon-remove"></span> Remove
+                    </button></p>
+
                     <mock-form-component mock="mock"></mock-form-component>
                 </accordion-group>
             </accordion>

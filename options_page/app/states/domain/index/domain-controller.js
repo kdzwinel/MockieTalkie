@@ -13,4 +13,10 @@ angular.module('optionsPage')
     MockRepository.getMocksByDomain($scope.domain).then(function (mocks) {
       $scope.mocks = mocks;
     });
+
+    $scope.removeMock = function(mock) {
+      var idx = $scope.mocks.indexOf(mock);
+      $scope.mocks.splice(idx,1);
+      MockRepository.delete(mock);
+    }
   });
