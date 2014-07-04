@@ -121,5 +121,13 @@ angular.module('optionsPage')
       chrome.storage.local.set({mocks: (this._mocks)});
     };
 
+    MockRepository.prototype.deleteByDomain = function(domainName) {
+      this._mocks = this._mocks.filter(function(mock) {
+        return !(mock.getURLPart('hostname') === domainName);
+      });
+
+      chrome.storage.local.set({mocks: (this._mocks)});
+    };
+
     return new MockRepository();
   });
