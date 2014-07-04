@@ -42,6 +42,19 @@ function MockStorage() {
     return -1;
   }
 
+  function findMockIndexByMethodAndUrl(mock) {
+    var method = (mock.requestMethod).toLowerCase(),
+      url = mock.requestURL;
+
+    for(var i=0, l=_mocks.length; i<l; i++) {
+      if((_mocks[i].requestMethod).toLowerCase() === method && _mocks[i].requestURL === url) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
+
   /**
    * Looks for matching mocks
    * @param data Request metadata (requestMethod, requestURL, requestText)
@@ -49,13 +62,13 @@ function MockStorage() {
    */
   this.match = function(data, callback) {
     var match = null,
-      method = data.requestMethod,
+      method = (data.requestMethod).toLowerCase(),
       url = data.requestURL;
 
     for (var idx in _mocks) {
       var mock = _mocks[idx];
 
-      if (method.toLowerCase() === (mock.requestMethod).toLowerCase()) {
+      if (method === (mock.requestMethod).toLowerCase()) {
 
         //handle wildcard '{{*}}'
         if ((mock.requestURL).indexOf('{{*}}') !== -1) {
@@ -82,16 +95,22 @@ function MockStorage() {
    * @param callback Function that will be called after mock data have been stored
    */
   this.save = function(mock, callback) {
-    if(mock.id) {
-      var idx = getMockIndexById(mock.id);
+    var idx;
 
-      if(idx !== -1) {
-        _mocks[idx] = mock;
-      }
+    if(mock.id) {
+      idx = getMockIndexById(mock.id);
+    } else {
+      //We don't want to store same mocks multiple times, lets search for exact matches (method + url)
+      idx = findMockIndexByMethodAndUrl(mock);
+    }
+
+    if(idx > -1) {
+      _mocks[idx] = mock;
     } else {
       mock.id = guid();
       _mocks.push(mock);
     }
+
     chrome.storage.local.set({mocks: _mocks}, callback);
 
     console.log('save_mock', mock);
