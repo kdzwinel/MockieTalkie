@@ -26,3 +26,11 @@ html {
 {
   cursor: pointer;
 }
+
+#root > div[ng-view] > .container, #root > div[ui-view] > .container {
+  margin-top: 60px;
+}
+
+.page-header {
+  margin: 20px 0 20px;
+}

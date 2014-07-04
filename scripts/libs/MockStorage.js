@@ -22,10 +22,10 @@ function MockStorage() {
         .toString(16)
         .substring(1);
     }
-    return function() {
+    return (function() {
       return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
         s4() + '-' + s4() + s4() + s4();
-    };
+    })();
   }
 
   function escapeRegExp(str) {
@@ -82,8 +82,6 @@ function MockStorage() {
    * @param callback Function that will be called after mock data have been stored
    */
   this.save = function(mock, callback) {
-    mock.id = mock.id || guid();
-
     if(mock.id) {
       var idx = getMockIndexById(mock.id);
 

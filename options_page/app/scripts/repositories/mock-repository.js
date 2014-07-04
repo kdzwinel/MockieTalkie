@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('optionsPage')
-  .factory('MockRepository', function ($injector, MockModel, $q) {
+  .factory('MockRepository', function ($injector, MockModel, $q, _) {
     var a = document.createElement('a');
 
     function getDomain(url) {
@@ -45,6 +45,24 @@ angular.module('optionsPage')
       }
 
       return -1;
+    };
+
+    MockRepository.prototype.getMockById = function(id) {
+      var defer = $q.defer();
+
+      this.getAll().then(function (mocks) {
+        var mock = _.find(mocks, function(mock) {
+          return mock.id === id;
+        });
+
+        if(mock) {
+          defer.resolve(mock);
+        } else {
+          defer.reject();
+        }
+      });
+
+      return defer.promise;
     };
 
     MockRepository.prototype.getDomains = function () {

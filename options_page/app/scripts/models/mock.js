@@ -17,7 +17,7 @@ angular.module('optionsPage')
 
       return {
         protocol: a.protocol,
-        domain: a.domain,
+        hostname: a.hostname,
         port: a.port,
         pathname: a.pathname,
         search: a.search,

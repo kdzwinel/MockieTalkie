@@ -5,21 +5,25 @@
             <h2 class="page-header">Domains</h2>
             <p class="lead">All mocks grouped by domain.</p>
 
-            <div class="panel panel-default" ng-repeat="domain in domains">
-                <div class="panel-heading" ng-click="manageDomainMocks(domain)">
-                    <h3 class="panel-title">{{domain.name}} - <span class="entriescount">
-                        <ng-pluralize count="domain.count" when="{'1': 'one entry', 'other': '{} entries'}"></ng-pluralize>
-                    </span></h3>
-                </div>
-                <div class="panel-body">
-                    <button type="button" class="btn btn-default btn-xs">
-                        <span class="glyphicon glyphicon-export"></span> Export
-                    </button>
-                    <button type="button" class="btn btn-danger btn-xs">
-                        <span class="glyphicon glyphicon-remove"></span> Remove
-                    </button>
-                </div>
-            </div>
+            <table class="table">
+                <thead>
+                    <tr><th>Domain</th><th># mocks</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="domain in domains">
+                        <td ui-sref="domain({name:domain.name})">{{domain.name}}</td>
+                        <td ui-sref="domain({name:domain.name})">{{domain.count}}</td>
+                        <td>
+                            <button type="button" class="btn btn-default btn-xs">
+                                <span class="glyphicon glyphicon-export"></span> Export
+                            </button>
+                            <button type="button" class="btn btn-danger btn-xs">
+                                <span class="glyphicon glyphicon-remove"></span> Remove
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 

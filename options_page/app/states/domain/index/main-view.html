@@ -2,22 +2,29 @@
 
     <div class="row">
         <div class="col-lg-12">
+            <ol class="breadcrumb">
+                <li><a ui-sref="index()">Domains</a></li>
+                <li class="active">{{domain}}</li>
+            </ol>
+
             <h2 class="page-header">{{domain}}</h2>
             <p class="lead">List of all mocks for "{{domain}}" domain.</p>
 
-            <accordion close-others="true">
-                <accordion-group ng-repeat="mock in mocks">
-                    <accordion-heading>
-                        <strong>{{mock.requestMethod}}</strong> {{mock.getURLPart('pathname')}}<span class="urlpath">{{mock.getURLPart('search')}}{{mock.getURLPart('hash')}}</span>
-                    </accordion-heading>
-
-                    <p><button type="button" class="btn btn-danger btn-xs" ng-click="removeMock(mock)">
-                        <span class="glyphicon glyphicon-remove"></span> Remove
-                    </button></p>
-
-                    <mock-form-component mock="mock"></mock-form-component>
-                </accordion-group>
-            </accordion>
+            <table class="table">
+                <thead>
+                <tr><th>URL</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="mock in mocks">
+                    <td ui-sref="mock({id:mock.id})" class="url"><strong>{{mock.requestMethod}}</strong> {{mock.getURLPart('pathname')}}<span class="urlpath">{{mock.getURLPart('search')}}{{mock.getURLPart('hash')}}</span></td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-xs" ng-click="removeMock(mock)">
+                            <span class="glyphicon glyphicon-remove"></span> Remove
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 

@@ -1,0 +1,20 @@
+<div class="mock-state container">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <ol class="breadcrumb">
+                <li><a ui-sref="index()">Domains</a></li>
+                <li><a ui-sref="domain({name:getDomain()})">{{getDomain()}}</a></li>
+                <li class="active">Edit mock</li>
+            </ol>
+
+            <h2 class="page-header"><strong>{{mock.requestMethod}}</strong> {{mock.getURLPart('pathname')}}<span class="urlpath">{{mock.getURLPart('search')}}{{mock.getURLPart('hash')}}</span></h2>
+
+            <p class="lead">Edit mock.</p>
+
+            <mock-form-component mock="mock"></mock-form-component>
+
+        </div>
+    </div>
+
+</div>
