@@ -35,6 +35,16 @@ angular.module('optionsPage')
       return defer.promise;
     };
 
+    MockRepository.prototype._getMockIndexById = function(id) {
+      for(var i=0, l=(this._mocks).length; i<l; i++) {
+        if((this._mocks)[i].id === id) {
+          return i;
+        }
+      }
+
+      return -1;
+    };
+
     MockRepository.prototype.getDomains = function () {
       var defer = $q.defer();
 
@@ -84,11 +94,11 @@ angular.module('optionsPage')
     };
 
     MockRepository.prototype.delete = function(mock) {
-      var idx = this._mocks.indexOf(mock);
+      var idx = this._getMockIndexById(mock.id);
       if(idx > -1) {
         this._mocks.splice(idx, 1);
       }
-      chrome.storage.local.set({mocks:this._mocks});
+      chrome.storage.local.set({mocks: (this._mocks)});
     };
 
     return new MockRepository();
