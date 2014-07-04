@@ -26,7 +26,7 @@
                 <label for="mock_{{mock.id}}_code" class="col-sm-2 control-label">HTTP Code</label>
 
                 <div class="col-sm-10">
-                    <input type="number" class="form-control" id="mock_{{mock.id}}_code" ng-model="mock.responseHTTPCode" ng-blur="mock.$save()" typeahead="responseCode as responseCode.value for responseCode in responseCodesHTTP | filter:{value:$viewValue}" typeahead-template-url="responseHTTPCodeSelect">
+                    <input type="number" class="form-control" id="mock_{{mock.id}}_code" ng-model="mock.responseHTTPCode" ng-blur="mock.$save()" typeahead="responseCode.value for responseCode in responseCodesHTTP | filter:{value:$viewValue}" typeahead-template-url="responseHTTPCodeSelect">
                 </div>
             </div>
             <div class="form-group">
