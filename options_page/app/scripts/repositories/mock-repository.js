@@ -2,8 +2,9 @@
 
 angular.module('optionsPage')
   .factory('MockRepository', function ($injector, MockModel, $q) {
+    var a = document.createElement('a');
+
     function getDomain(url) {
-      var a = document.createElement('a');
       a.href = url;
       return a.hostname;
     }
@@ -14,6 +15,7 @@ angular.module('optionsPage')
       //reload data after change
       chrome.storage.onChanged.addListener(function(change, storage) {
         if(storage === 'local' && change.mocks && change.mocks.newValue) {
+          console.log('_mocks update');
           this._mocks = (change.mocks.newValue).map(function(rawMock){
             return new MockModel(rawMock);
           });

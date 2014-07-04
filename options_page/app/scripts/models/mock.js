@@ -2,6 +2,7 @@
 
 angular.module('optionsPage')
   .factory('MockModel', function ($rootScope, BaseModel, $injector, $q) {
+    var a = document.createElement('a');
 
     function MockModel(data) {
       data = data || {};
@@ -12,7 +13,6 @@ angular.module('optionsPage')
     MockModel.prototype = Object.create(BaseModel.prototype);
 
     MockModel.prototype.getURLParts = function() {
-      var a = document.createElement('a');
       a.href = this.requestURL;
 
       return {
