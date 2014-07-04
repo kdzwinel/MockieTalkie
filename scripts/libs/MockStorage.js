@@ -1,16 +1,16 @@
 "use strict";
 
 function MockStorage() {
-  var mocks = [];
+  var _mocks = [];
 
   //load data immediately
   chrome.storage.local.get('mocks', function(data) {
-    mocks = data.mocks;
+    _mocks = data.mocks;
   });
   //reload data after change
   chrome.storage.onChanged.addListener(function(change, storage) {
     if(storage === 'local' && change.mocks && change.mocks.newValue) {
-      mocks = change.mocks.newValue;
+      _mocks = change.mocks.newValue;
     }
   });
 
@@ -32,6 +32,16 @@ function MockStorage() {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
   }
 
+  function getMockIndexById(id) {
+    for(var i=0, l=_mocks.length; i<l; i++) {
+      if(_mocks[i].id === id) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
+
   /**
    * Looks for matching mocks
    * @param data Request metadata (requestMethod, requestURL, requestText)
@@ -42,8 +52,8 @@ function MockStorage() {
       method = data.requestMethod,
       url = data.requestURL;
 
-    for (var idx in mocks) {
-      var mock = mocks[idx];
+    for (var idx in _mocks) {
+      var mock = _mocks[idx];
 
       if (method.toLowerCase() === (mock.requestMethod).toLowerCase()) {
 
@@ -74,8 +84,17 @@ function MockStorage() {
   this.save = function(mock, callback) {
     mock.id = mock.id || guid();
 
-    mocks.push(mock);
-    chrome.storage.local.set({mocks: mocks}, callback);
+    if(mock.id) {
+      var idx = getMockIndexById(mock.id);
+
+      if(idx !== -1) {
+        _mocks[idx] = mock;
+      }
+    } else {
+      mock.id = guid();
+      _mocks.push(mock);
+    }
+    chrome.storage.local.set({mocks: _mocks}, callback);
 
     console.log('save_mock', mock);
   };

@@ -1,4 +1,8 @@
 <form class="mock-form-component form-horizontal" role="form">
+    <script type="text/ng-template" id="responseHTTPCodeSelect">
+        <a>{{match.model.value}} - <em>{{match.model.text}}</em></a>
+    </script>
+
     <tabset>
         <tab heading="Request">
             <div class="form-group">
@@ -22,7 +26,7 @@
                 <label for="mock_{{mock.id}}_code" class="col-sm-2 control-label">HTTP Code</label>
 
                 <div class="col-sm-10">
-                    <input type="number" class="form-control" id="mock_{{mock.id}}_code" ng-model="mock.responseHTTPCode" ng-blur="mock.$save()">
+                    <input type="text" class="form-control" id="mock_{{mock.id}}_code" ng-model="mock.responseHTTPCode" ng-blur="mock.$save()" typeahead="responseCode as responseCode.value for responseCode in responseCodesHTTP | filter:{value:$viewValue}" typeahead-template-url="responseHTTPCodeSelect">
                 </div>
             </div>
             <div class="form-group">
