@@ -5,7 +5,7 @@ function MockStorage() {
 
   //load data immediately
   chrome.storage.local.get('mocks', function(data) {
-    _mocks = data.mocks;
+    _mocks = (data && data.mocks) ? data.mocks : [];
   });
   //reload data after change
   chrome.storage.onChanged.addListener(function(change, storage) {
