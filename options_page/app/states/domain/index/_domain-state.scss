@@ -1,5 +1,17 @@
 .domain-state  {
-  .urlpath {
-    color: gray;
+  table {
+    table-layout:fixed;
+
+    .url {
+      word-wrap: break-word;
+
+      .urlpath {
+        color: gray;
+      }
+    }
+
+    .buttons {
+      width: 100px;
+    }
   }
 }

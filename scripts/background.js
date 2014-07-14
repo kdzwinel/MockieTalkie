@@ -91,5 +91,10 @@ chrome.runtime.onMessage.addListener(function (request, sender, response) {
     mockStorage.save(mock, response);
   } else if (request.message === 'get_matching_mock') {
     mockStorage.match(request.data, response);
+  } else if (request.message === 'remove_mock') {
+    var mockId = request.data;
+    mockStorage.remove(mockId, response);
+  } else if (request.message === 'get_all_mocks') {
+    response(mockStorage.getAll());
   }
 });

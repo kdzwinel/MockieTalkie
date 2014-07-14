@@ -8,11 +8,12 @@ function MockStorage() {
     _mocks = (data && data.mocks) ? data.mocks : [];
   });
   //reload data after change
-  chrome.storage.onChanged.addListener(function(change, storage) {
-    if(storage === 'local' && change.mocks && change.mocks.newValue) {
-      _mocks = change.mocks.newValue;
-    }
-  });
+  //We shouldn't need that, all changes go through MockStorage
+//  chrome.storage.onChanged.addListener(function(change, storage) {
+//    if(storage === 'local' && change.mocks && change.mocks.newValue) {
+//      _mocks = change.mocks.newValue;
+//    }
+//  });
 
   //Unique ID generator
   //http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
@@ -114,5 +115,20 @@ function MockStorage() {
     chrome.storage.local.set({mocks: _mocks}, callback);
 
     console.log('save_mock', mock);
+  };
+
+  this.remove = function(mockId, callback) {
+    var mockIdx = getMockIndexById(mockId);
+
+    console.log('remove_mock', _mocks[mockIdx]);
+
+    if(mockIdx !== -1) {
+      _mocks.splice(mockIdx, 1);
+      chrome.storage.local.set({mocks: _mocks}, callback);
+    }
+  };
+
+  this.getAll = function() {
+    return _mocks;
   };
 }

@@ -16,9 +16,41 @@ angular.module('optionsPage')
       chrome.storage.onChanged.addListener(function(change, storage) {
         if(storage === 'local' && change.mocks && change.mocks.newValue) {
           console.log('_mocks update');
-          this._mocks = (change.mocks.newValue).map(function(rawMock){
-            return new MockModel(rawMock);
+
+          var mocks = this._mocks;
+          var newMocks = change.mocks.newValue || [];
+          var mocksToRemove = [];
+
+          //update
+          mocks.forEach(function(mock) {
+            var newMock = _.find(newMocks, function(item) {
+              return item.id === mock.id;
+            });
+
+            if(newMock) {
+              mock.update(newMock);
+            } else {
+              mocksToRemove.push(mock.id);
+            }
           });
+
+          //remove
+          mocks = mocks.filter(function(mock) {
+            return mocksToRemove.indexOf(mock.id) === -1;
+          });
+
+          //add
+          newMocks.forEach(function(newMock) {
+            var mock = _.find(mocks, function(item) {
+              return item.id === newMock.id;
+            });
+
+            if(!mock) {
+              mocks.push(new MockModel(newMock));
+            }
+          });
+
+          this._mocks = mocks;
         }
       }.bind(this));
     };
@@ -100,8 +132,13 @@ angular.module('optionsPage')
       var defer = $q.defer();
 
       if (!this._mocks) {
-        chrome.storage.local.get('mocks', function(data) {
-          this._mocks = (data.mocks).map(function(rawMock){
+
+        var json = JSON.stringify({
+          message: 'get_all_mocks'
+        });
+
+        chrome.runtime.sendMessage(json, function (rawMocks) {
+          this._mocks = rawMocks.map(function(rawMock){
             return new MockModel(rawMock);
           });
           defer.resolve(this._mocks);
@@ -116,17 +153,20 @@ angular.module('optionsPage')
     MockRepository.prototype.delete = function(mock) {
       var idx = this._getMockIndexById(mock.id);
       if(idx > -1) {
+        this._mocks[idx].$delete();
         this._mocks.splice(idx, 1);
       }
-      chrome.storage.local.set({mocks: (this._mocks)});
     };
 
     MockRepository.prototype.deleteByDomain = function(domainName) {
       this._mocks = this._mocks.filter(function(mock) {
-        return !(mock.getURLPart('hostname') === domainName);
+        if(mock.getURLPart('hostname') === domainName) {
+          mock.$delete();
+          return false;
+        } else {
+          return true;
+        }
       });
-
-      chrome.storage.local.set({mocks: (this._mocks)});
     };
 
     return new MockRepository();

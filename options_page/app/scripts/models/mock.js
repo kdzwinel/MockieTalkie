@@ -12,6 +12,11 @@ angular.module('optionsPage')
 
     MockModel.prototype = Object.create(BaseModel.prototype);
 
+    MockModel.prototype.update = function(data) {
+      data = data || {};
+      angular.extend(this, data);
+    };
+
     MockModel.prototype.getURLParts = function() {
       a.href = this.requestURL;
 
@@ -40,6 +45,7 @@ angular.module('optionsPage')
         message: 'save_mock',
         data: mock
       });
+
       chrome.runtime.sendMessage(json, function () {
         defer.resolve();
       }.bind(this));
@@ -48,6 +54,18 @@ angular.module('optionsPage')
     };
 
     MockModel.prototype.$delete = function() {
+      var defer = $q.defer();
+
+      var json = JSON.stringify({
+        message: 'remove_mock',
+        data: this.id
+      });
+
+      chrome.runtime.sendMessage(json, function () {
+        defer.resolve();
+      }.bind(this));
+
+      return defer.promise;
     };
 
     return MockModel;

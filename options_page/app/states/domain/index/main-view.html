@@ -12,12 +12,12 @@
 
             <table class="table">
                 <thead>
-                <tr><th>URL</th><th>Actions</th></tr>
+                <tr><th>URL</th><th class="buttons">Actions</th></tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="mock in mocks">
                     <td ui-sref="mock({id:mock.id})" class="url"><strong>{{mock.requestMethod}}</strong> {{mock.getURLPart('pathname')}}<span class="urlpath">{{mock.getURLPart('search')}}{{mock.getURLPart('hash')}}</span></td>
-                    <td>
+                    <td class="buttons">
                         <button type="button" class="btn btn-danger btn-xs" ng-click="removeMock(mock)">
                             <span class="glyphicon glyphicon-remove"></span> Remove
                         </button>
