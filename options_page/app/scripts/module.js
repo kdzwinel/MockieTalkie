@@ -15,6 +15,7 @@ var app = angular.module('optionsPage', [
 //  'cgBusy',
 //  'chieffancypants.loadingBar',
   'ui.router',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'ui.codemirror'
 ]);
 angular.componentFactory.moduleDecorator(app);

@@ -1,0 +1,18 @@
+<div class="payload-editor-component">
+    <div ui-codemirror="{ onLoad : codemirrorLoaded }"
+         ui-refresh="refresh"
+         ng-model="mock.responseText"
+         class="editor"></div>
+
+    <div class="tools">
+        <select class="btn btn-xs btn-default" ng-model="editorMode">
+            <option value="plain">Plain text</option>
+            <option value="json">JSON</option>
+            <option value="javascript">JavaScript</option>
+            <option value="html">HTML</option>
+            <option value="xml">XML</option>
+        </select>
+        |
+        <button class="btn btn-xs btn-default" ng-click="editorFullScreen()"><i class="glyphicon glyphicon-fullscreen"></i></button>
+    </div>
+</div>

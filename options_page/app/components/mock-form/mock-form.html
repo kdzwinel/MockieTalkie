@@ -21,7 +21,7 @@
                 </div>
             </div>
         </tab>
-        <tab heading="Response">
+        <tab heading="Response" select="refreshEditor()">
             <div class="form-group">
                 <label for="mock_{{mock.id}}_code" class="col-sm-2 control-label">HTTP Code</label>
 
@@ -30,10 +30,10 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="mock_{{mock.id}}_content" class="col-sm-2 control-label">Content</label>
+                <label class="col-sm-2 control-label">Content</label>
 
                 <div class="col-sm-10">
-                    <textarea class="form-control" rows="5" id="mock_{{mock.id}}_content" ng-model="mock.responseText" ng-blur="mock.$save()"></textarea>
+                    <payload-editor-component mock="mock" refresh="refreshEditorHelper"></payload-editor-component>
                 </div>
             </div>
             <div class="form-group">
@@ -41,6 +41,16 @@
 
                 <div class="col-sm-10">
                     <header-list-component headers="mock.responseHeaders" mock="mock"></header-list-component>
+                </div>
+            </div>
+        </tab>
+        <tab heading="Advanced">
+            <div class="form-group">
+                <label for="mock_{{mock.id}}_priority" class="col-sm-2 control-label">Priority</label>
+
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" id="mock_{{mock.id}}_priority" ng-model="mock.priority" ng-blur="mock.$save()">
+                    <p class="help-block" ng-non-bindable>When multiple mocks match single request, one with the highest priority will be used.</p>
                 </div>
             </div>
         </tab>

@@ -7,6 +7,7 @@ angular.module('optionsPage')
     function MockModel(data) {
       data = data || {};
       data.url = '-';
+      data.priority = data.priority || 0;
       BaseModel.call(this, data);
     }
 
@@ -32,6 +33,22 @@ angular.module('optionsPage')
 
     MockModel.prototype.getURLPart = function(partName) {
       return (this.getURLParts())[partName];
+    };
+
+    MockModel.prototype.getResponseContentType = function() {
+      var type = 'unknown';
+
+      (this.responseHeaders).forEach(function(header) {
+        if((header.name).toLowerCase() === 'content-type') {
+          var matches = (header.value).match('(json|html|javascript|xml)');
+
+          if(matches[1]) {
+            type = matches[1];
+          }
+        }
+      });
+
+      return type;
     };
 
     MockModel.prototype.$save = function() {

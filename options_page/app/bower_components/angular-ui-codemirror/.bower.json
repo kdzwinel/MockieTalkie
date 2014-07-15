@@ -3,14 +3,14 @@
   "main": "./ui-codemirror.js",
   "dependencies": {
     "angular": "^1",
-    "codemirror": "^3"
+    "codemirror": "3 || 4"
   },
   "homepage": "https://github.com/angular-ui/ui-codemirror",
-  "_release": "c98d3918c5",
+  "_release": "8dbe7d0c1f",
   "_resolution": {
     "type": "branch",
     "branch": "bower",
-    "commit": "c98d3918c5b2e41cda03414ea245386efb4f375e"
+    "commit": "8dbe7d0c1f9f32856d137a8d65c93c47151dbdcc"
   },
   "_source": "git://github.com/angular-ui/ui-codemirror.git",
   "_target": "bower",

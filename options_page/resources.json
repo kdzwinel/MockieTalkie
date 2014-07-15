@@ -26,7 +26,14 @@
       "bower_components/ng-symbiosis-routeprovider/ng-symbiosis-routeprovider.src.js",
       "bower_components/ng-symbiosis-repository/ng-symbiosis-repository.src.js",
       "bower_components/ng-symbiosis-model/ng-symbiosis-model.src.js",
-      "bower_components/log/log.js"
+      "bower_components/log/log.js",
+
+      "bower_components/codemirror/lib/codemirror.js",
+      "bower_components/codemirror/mode/javascript/javascript.js",
+      "bower_components/codemirror/mode/htmlmixed/htmlmixed.js",
+      "bower_components/codemirror/mode/xml/xml.js",
+      "bower_components/codemirror/addon/display/fullscreen.js",
+      "bower_components/angular-ui-codemirror/ui-codemirror.js"
     ],
     "externalExcludeFromBuild": [
       "bower_components/angular-mocks/angular-mocks*.js"

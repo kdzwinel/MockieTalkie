@@ -18,5 +18,5 @@ angular.module('optionsPage')
       var idx = $scope.mocks.indexOf(mock);
       $scope.mocks.splice(idx,1);
       MockRepository.delete(mock);
-    }
+    };
   });

@@ -45,6 +45,10 @@ angular.module('optionsPage.components')
       {value: 505, text: 'HTTP Version Not Supported'},
       {value: 511, text: 'Network Authentication Required'}
     ];
+
+    $scope.refreshEditor = function() {
+      $scope.refreshEditorHelper = !$scope.refreshEditorHelper;
+    };
   })
   .component('mockForm', function () {
     return {

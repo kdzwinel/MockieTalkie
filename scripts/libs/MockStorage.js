@@ -7,13 +7,6 @@ function MockStorage() {
   chrome.storage.local.get('mocks', function(data) {
     _mocks = (data && data.mocks) ? data.mocks : [];
   });
-  //reload data after change
-  //We shouldn't need that, all changes go through MockStorage
-//  chrome.storage.onChanged.addListener(function(change, storage) {
-//    if(storage === 'local' && change.mocks && change.mocks.newValue) {
-//      _mocks = change.mocks.newValue;
-//    }
-//  });
 
   //Unique ID generator
   //http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
@@ -65,6 +58,10 @@ function MockStorage() {
     var match = null,
       method = (data.requestMethod).toLowerCase(),
       url = data.requestURL;
+
+    _mocks.sort(function(a, b) {
+      return (a.priority || 0) > (b.priority || 0);
+    });
 
     for (var idx in _mocks) {
       var mock = _mocks[idx];
