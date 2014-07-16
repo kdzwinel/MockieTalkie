@@ -3,7 +3,8 @@
 angular.module('optionsPage.components')
   .controller('payloadEditorComponentCtrl', function ($scope) {
     var responseTextEditor;
-    $scope.editorMode = 'plain';
+    $scope.mode = 'plain';
+    $scope.lineWrap = false;
 
     $scope.codemirrorLoaded = function (_editor) {
       responseTextEditor = _editor;
@@ -18,28 +19,34 @@ angular.module('optionsPage.components')
         }
       });
 
-
-      if($scope.mock) {
-        //set editor mode when both mock and editor
-        $scope.editorMode = $scope.mock.getResponseContentType();
-      }
-
       _editor.on("blur", function() {
-        if($scope.mock) {
-          $scope.mock.$save();
+        if(typeof $scope.onBlur === 'function') {
+          $scope.onBlur();
         }
       });
     };
 
-    $scope.$watch('mock', function() {
-      //set editor mode when mock loads
-      $scope.editorMode = $scope.mock.getResponseContentType();
+    $scope.toggleLineWrap = function() {
+      $scope.lineWrap = !$scope.lineWrap;
+      responseTextEditor.setOption('lineWrapping', $scope.lineWrap);
+    };
+
+    $scope.undo = function() {
+      responseTextEditor.undo();
+    };
+
+    $scope.redo = function() {
+      responseTextEditor.redo();
+    };
+
+    $scope.$watch('defaultMode', function() {
+      $scope.mode = $scope.defaultMode;
     });
 
-    $scope.$watch('editorMode', function() {
+    $scope.$watch('mode', function() {
       var settings = null;
 
-      switch($scope.editorMode) {
+      switch($scope.mode) {
         case 'json' : settings = {name: "javascript", json: true}; break;
         case 'javascript' : settings = 'javascript'; break;
         case 'xml' : settings = 'xml'; break;
@@ -59,8 +66,10 @@ angular.module('optionsPage.components')
     return {
       controller: 'payloadEditorComponentCtrl',
       scope: {
-        mock: '=',
-        refresh: '='
+        content: '=',
+        defaultMode: '=',
+        refresh: '=',
+        onBlur: '&'
       }
     };
   });

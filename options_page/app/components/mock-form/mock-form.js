@@ -5,8 +5,8 @@ angular.module('optionsPage.components')
     $scope.methodsHTTP = HTTPmethods;
     $scope.responseCodesHTTP = HTTPcodes;
 
-    $scope.refreshEditor = function() {
-      $scope.refreshEditorHelper = !$scope.refreshEditorHelper;
+    $scope.refreshResponseEditor = function() {
+      $scope.refreshResponseEditorHelper = !$scope.refreshResponseEditorHelper;
     };
   })
   .component('mockForm', function () {
