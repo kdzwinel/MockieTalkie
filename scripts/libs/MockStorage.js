@@ -49,6 +49,29 @@ function MockStorage() {
     return -1;
   }
 
+  function matchHTTPMethod(mockMethod, method) {
+    return (mockMethod.toLowerCase() === method.toLowerCase());
+  }
+
+  function matchURL(mockURL, url) {
+    //handle wildcard '{{*}}'
+    if (mockURL.indexOf('{{*}}') !== -1) {
+      var regexp = new RegExp('^' + escapeRegExp(mockURL).replace(/\\\{\\\{\\\*\\\}\\\}/g, '(.*)') + '$');
+
+      if (regexp.test(url)) {
+        return true;
+      }
+    } else if (mockURL === url) {
+      return true;
+    }
+
+    return false;
+  }
+
+  function matchPayload(mockPayload, payload) {
+    return mockPayload === payload;
+  }
+
   /**
    * Looks for matching mocks
    * @param data Request metadata (requestMethod, requestURL, requestText)
@@ -57,7 +80,8 @@ function MockStorage() {
   this.match = function(data, callback) {
     var match = null,
       method = (data.requestMethod).toLowerCase(),
-      url = data.requestURL;
+      url = data.requestURL,
+      payload = data.requestText;
 
     _mocks.sort(function(a, b) {
       return (a.priority || 0) > (b.priority || 0);
@@ -66,19 +90,12 @@ function MockStorage() {
     for (var idx in _mocks) {
       var mock = _mocks[idx];
 
-      if (method === (mock.requestMethod).toLowerCase()) {
-
-        //handle wildcard '{{*}}'
-        if ((mock.requestURL).indexOf('{{*}}') !== -1) {
-          var regexp = new RegExp('^' + escapeRegExp(mock.requestURL).replace(/\\\{\\\{\\\*\\\}\\\}/g, '(.*)') + '$');
-
-          if (regexp.test(url)) {
+      if (matchHTTPMethod(mock.requestMethod, method)) {
+        if(matchURL(mock.requestURL, url)){
+          if(!mock.matchRequestPayload || (mock.matchRequestPayload && matchPayload(mock.requestText, payload))) {
             match = mock;
             break;
           }
-        } else if (mock.requestURL === url) {
-          match = mock;
-          break;
         }
       }
     }
