@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('optionsPage.components')
-  .controller('payloadEditorComponentCtrl', function ($scope) {
+  .controller('payloadEditorComponentCtrl', function ($scope, $element, $interval) {
     var responseTextEditor;
     $scope.mode = 'plain';
     $scope.lineWrap = false;
@@ -24,6 +24,14 @@ angular.module('optionsPage.components')
           $scope.onBlur();
         }
       });
+
+      //editor needs a little push to refresh if it was invisible when page first loaded (e.g. when using tabs)
+      var promise = $interval(function() {
+        if($element.is(':visible')) {
+          responseTextEditor.refresh();
+          $interval.cancel(promise)
+        }
+      }, 300);
     };
 
     $scope.toggleLineWrap = function() {
@@ -40,7 +48,7 @@ angular.module('optionsPage.components')
     };
 
     $scope.$watch('defaultMode', function() {
-      $scope.mode = $scope.defaultMode;
+      $scope.mode = $scope.defaultMode || 'plain';
     });
 
     $scope.$watch('mode', function() {
@@ -50,7 +58,7 @@ angular.module('optionsPage.components')
         case 'json' : settings = {name: "javascript", json: true}; break;
         case 'javascript' : settings = 'javascript'; break;
         case 'xml' : settings = 'xml'; break;
-        case 'html' : settings = 'htmlmixed'; break;
+        case 'html' : settings = {name: 'xml', htmlMode: true}; break;
       }
 
       responseTextEditor.setOption('mode', settings);
@@ -68,7 +76,6 @@ angular.module('optionsPage.components')
       scope: {
         content: '=',
         defaultMode: '=',
-        refresh: '=',
         onBlur: '&'
       }
     };

@@ -31,7 +31,7 @@
                 </div>
             </div>
         </tab>
-        <tab heading="Response" select="refreshResponseEditor()">
+        <tab heading="Response">
             <div class="form-group">
                 <label for="mock_{{mock.id}}_code" class="col-sm-2 control-label">HTTP Code</label>
 
@@ -46,7 +46,6 @@
                     <payload-editor-component
                             content="mock.responseText"
                             default-mode="mock.getResponseContentType()"
-                            refresh="refreshResponseEditorHelper"
                             on-blur="mock.$save()"></payload-editor-component>
                 </div>
             </div>

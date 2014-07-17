@@ -35,14 +35,14 @@ angular.module('optionsPage')
       return (this.getURLParts())[partName];
     };
 
-    function getTypeFromHeaders(headers) {
-      var type = 'unknown';
+    function getContentTypeFromHeaders(headers) {
+      var type = null;
 
       headers.forEach(function(header) {
         if((header.name).toLowerCase() === 'content-type') {
           var matches = (header.value).match('(json|html|javascript|xml)');
 
-          if(matches[1]) {
+          if(matches && matches[1]) {
             type = matches[1];
           }
         }
@@ -52,11 +52,11 @@ angular.module('optionsPage')
     }
 
     MockModel.prototype.getResponseContentType = function() {
-      return getTypeFromHeaders(this.responseHeaders);
+      return getContentTypeFromHeaders(this.responseHeaders);
     };
 
     MockModel.prototype.getRequestContentType = function() {
-      return getTypeFromHeaders(this.requestHeaders);
+      return getContentTypeFromHeaders(this.requestHeaders);
     };
 
     MockModel.prototype.$save = function() {

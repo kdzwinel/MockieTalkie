@@ -2,7 +2,7 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <h2 class="page-header">Domains</h2>
+            <h2 class="page-header">Mocks</h2>
             <p class="lead">All mocks grouped by domain.</p>
 
             <table class="table">
@@ -10,7 +10,7 @@
                     <tr><th>Domain</th><th># mocks</th><th>Actions</th></tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="domain in domains">
+                    <tr ng-repeat="domain in domains | orderBy:'name'">
                         <td ui-sref="domain({name:domain.name})">{{domain.name}}</td>
                         <td ui-sref="domain({name:domain.name})">{{domain.count}}</td>
                         <td>

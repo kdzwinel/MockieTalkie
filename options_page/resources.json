@@ -30,7 +30,6 @@
 
       "bower_components/codemirror/lib/codemirror.js",
       "bower_components/codemirror/mode/javascript/javascript.js",
-      "bower_components/codemirror/mode/htmlmixed/htmlmixed.js",
       "bower_components/codemirror/mode/xml/xml.js",
       "bower_components/codemirror/addon/display/fullscreen.js",
       "bower_components/angular-ui-codemirror/ui-codemirror.js"
