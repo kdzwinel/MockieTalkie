@@ -12,40 +12,19 @@ angular.module('optionsPage')
     var MockRepository = function () {
       this._mocks = null;
 
-      //reload data after change
+      // Load new mocks, added by the background page in the 'learning' process, without need to reload the page
       chrome.storage.onChanged.addListener(function(change, storage) {
         if(storage === 'local' && change.mocks && change.mocks.newValue) {
-          console.log('_mocks update');
-
           var mocks = this._mocks;
           var newMocks = change.mocks.newValue || [];
-          var mocksToRemove = [];
 
-          //update
-          mocks.forEach(function(mock) {
-            var newMock = _.find(newMocks, function(item) {
-              return item.id === mock.id;
-            });
-
-            if(newMock) {
-              mock.update(newMock);
-            } else {
-              mocksToRemove.push(mock.id);
-            }
-          });
-
-          //remove
-          mocks = mocks.filter(function(mock) {
-            return mocksToRemove.indexOf(mock.id) === -1;
-          });
-
-          //add
           newMocks.forEach(function(newMock) {
             var mock = _.find(mocks, function(item) {
               return item.id === newMock.id;
             });
 
             if(!mock) {
+              console.log('new mock loaded from storage');
               mocks.push(new MockModel(newMock));
             }
           });

@@ -1,9 +1,14 @@
 'use strict';
 
 angular.module('optionsPage.components')
-  .controller('mockFormComponentCtrl', function ($scope, $element, HTTPmethods, HTTPcodes) {
+  .controller('mockFormComponentCtrl', function ($scope, _, HTTPmethods, HTTPcodes) {
     $scope.methodsHTTP = HTTPmethods;
     $scope.responseCodesHTTP = HTTPcodes;
+    $scope.paramsEditorHidden = true;
+
+    $scope.save = _.debounce(function() {
+      $scope.mock.$save();
+    }, 300);
   })
   .component('mockForm', function () {
     return {

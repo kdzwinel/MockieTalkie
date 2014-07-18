@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('optionsPage.components')
-  .controller('headerListComponentCtrl', function ($scope, $element) {
+  .controller('headersEditorComponentCtrl', function ($scope) {
     $scope.addHeader = function () {
       $scope.headers.push({
         name: '',
@@ -24,15 +24,17 @@ angular.module('optionsPage.components')
         return true;
       });
 
-      $scope.mock.$save();
+      if(typeof $scope.onChange === 'function') {
+        $scope.onChange();
+      }
     }
   })
-  .component('headerList', function () {
+  .component('headersEditor', function () {
     return {
       scope: {
         headers: '=',
-        mock: '='
+        onChange: '&'
       },
-      controller: 'headerListComponentCtrl'
+      controller: 'headersEditorComponentCtrl'
     };
   });

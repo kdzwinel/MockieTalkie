@@ -13,11 +13,6 @@ angular.module('optionsPage')
 
     MockModel.prototype = Object.create(BaseModel.prototype);
 
-    MockModel.prototype.update = function(data) {
-      data = data || {};
-      angular.extend(this, data);
-    };
-
     MockModel.prototype.getURLParts = function() {
       a.href = this.requestURL;
 
