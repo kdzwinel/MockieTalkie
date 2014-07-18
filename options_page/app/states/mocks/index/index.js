@@ -3,7 +3,8 @@
 angular.module('optionsPage')
   .config(function ($stateProvider, stateFactory) {
     $stateProvider.state('index', stateFactory('Index', {
-      url: '/'
+      url: '/',
+      templateUrl: 'states/mocks/index/main-view.html'
     }));
   })
   .controller('IndexCtrl', function ($scope, $state, MockRepository) {
@@ -12,7 +13,7 @@ angular.module('optionsPage')
     });
 
     $scope.manageDomainMocks = function (domain) {
-      $state.go('domain', {domain: domain.name});
+      $state.go('domain', {name: domain.name});
     };
 
     $scope.removeDomain = function(domain) {

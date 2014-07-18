@@ -3,8 +3,8 @@
 angular.module('optionsPage')
   .config(function ($stateProvider, stateFactory) {
     $stateProvider.state('domain', stateFactory('Domain', {
-      url: '/domain/{name}',
-      templateUrl: 'states/domain/index/main-view.html'
+      url: '/mocks/domain/{name}',
+      templateUrl: 'states/mocks/domain/main-view.html'
     }));
   })
   .controller('DomainCtrl', function ($scope, $stateParams, MockRepository) {
