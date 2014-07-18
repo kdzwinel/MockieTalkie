@@ -54,9 +54,9 @@ function MockStorage() {
   }
 
   function matchURL(mockURL, url) {
-    //handle wildcard '{{*}}'
-    if (mockURL.indexOf('{{*}}') !== -1) {
-      var regexp = new RegExp('^' + escapeRegExp(mockURL).replace(/\\\{\\\{\\\*\\\}\\\}/g, '(.*)') + '$');
+    //handle wildcard '((*))'
+    if (mockURL.indexOf('((*))') !== -1) {
+      var regexp = new RegExp('^' + escapeRegExp(mockURL).replace(/\\\(\\\(\\\*\\\)\\\)/g, '(.*)') + '$');
 
       if (regexp.test(url)) {
         return true;
