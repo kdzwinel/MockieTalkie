@@ -60,7 +60,8 @@ angular.module('optionsPage.components')
       var newSearchQuery = getSearchQueryFromParams($scope.params);
 
       if(newSearchQuery !== oldSearchQuery) {
-        $scope.url = ($scope.url).replace(oldSearchQuery, newSearchQuery);
+        urlParser.search = newSearchQuery;
+        $scope.url = urlParser.href;
 
         if(typeof $scope.onChange === 'function') {
           $scope.onChange();
