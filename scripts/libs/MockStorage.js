@@ -100,7 +100,6 @@ function MockStorage() {
       }
     }
 
-    console.log('get_matching_mock', data, match);
     callback(match);
   };
 
@@ -110,7 +109,7 @@ function MockStorage() {
    * @param callback Function that will be called after mock data have been stored
    */
   this.save = function(mock, callback) {
-    var idx;
+    var idx, type;
 
     if(mock.id) {
       idx = getMockIndexById(mock.id);
@@ -120,26 +119,32 @@ function MockStorage() {
     }
 
     if(idx > -1) {
+      mock = _.extend(_mocks[idx], mock);
       _mocks[idx] = mock;
+      type = 'update';
     } else {
       mock.id = guid();
       _mocks.push(mock);
+      type = 'create';
     }
 
-    chrome.storage.local.set({mocks: _mocks}, callback);
-
-    console.log('save_mock', mock);
+    chrome.storage.local.set({mocks: _mocks}, function() {
+      callback(mock, type);
+    });
   };
 
   this.remove = function(mockId, callback) {
     var mockIdx = getMockIndexById(mockId);
 
-    console.log('remove_mock', _mocks[mockIdx]);
-
     if(mockIdx !== -1) {
-      _mocks.splice(mockIdx, 1);
+      var mock = _mocks.splice(mockIdx, 1);
       chrome.storage.local.set({mocks: _mocks}, callback);
+
+      callback(mock[0]);
+      return;
     }
+
+    callback(null);
   };
 
   this.getAll = function() {

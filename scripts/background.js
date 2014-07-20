@@ -76,6 +76,9 @@ chrome.browserAction.onClicked.addListener(function(tab) {
   }
 });
 
+//MESSAGING
+
+var activityLog = new ActivityLog();
 var mockStorage = new MockStorage();
 
 chrome.runtime.onMessage.addListener(function (request, sender, response) {
@@ -88,12 +91,34 @@ chrome.runtime.onMessage.addListener(function (request, sender, response) {
 
   if (request.message === 'save_mock') {
     var mock = request.data;
-    mockStorage.save(mock, response);
+    mockStorage.save(mock, function(mock, type) {
+      if(type === 'create') {
+        activityLog.mockCreated(mock);
+      } else if(type === 'update') {
+        activityLog.mockUpdated(mock);
+      }
+
+      response(mock);
+    });
   } else if (request.message === 'get_matching_mock') {
-    mockStorage.match(request.data, response);
+    mockStorage.match(request.data, function(mock) {
+      if(mock) {
+        activityLog.requestMocked(request.data, mock);
+      } else {
+        activityLog.mockNotFound(request.data);
+      }
+
+      response(mock);
+    });
   } else if (request.message === 'remove_mock') {
     var mockId = request.data;
-    mockStorage.remove(mockId, response);
+    mockStorage.remove(mockId, function(mock) {
+      if(mock) {
+        activityLog.mockRemoved(mock);
+      }
+
+      response();
+    });
   } else if (request.message === 'get_all_mocks') {
     response(mockStorage.getAll());
   }

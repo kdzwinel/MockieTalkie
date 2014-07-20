@@ -6,8 +6,8 @@
             <th>Value</th>
         </tr>
         </thead>
-        <tbody ng-repeat="header in headers">
-        <tr>
+        <tbody>
+        <tr ng-repeat="header in headers">
             <td><input type="text" class="form-control" ng-model="header.name" ng-blur="validateAndSave()"/></td>
             <td><input type="text" class="form-control" ng-model="header.value" ng-blur="validateAndSave()"/></td>
         </tr>

@@ -12,6 +12,7 @@
     "scripts": [
       "scripts/libs/underscore-min.js",
       "scripts/libs/MockStorage.js",
+      "scripts/libs/ActivityLog.js",
       "scripts/background.js"
     ]
   },

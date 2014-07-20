@@ -6,8 +6,8 @@
             <th>Value</th>
         </tr>
         </thead>
-        <tbody ng-repeat="param in params">
-        <tr>
+        <tbody>
+        <tr ng-repeat="param in params">
             <td><input type="text" class="form-control" ng-model="param.name" ng-blur="save()"/></td>
             <td><input type="text" class="form-control" ng-model="param.value" ng-blur="save()"/></td>
         </tr>

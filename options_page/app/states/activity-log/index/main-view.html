@@ -1,0 +1,50 @@
+<div class="activity-log-state container">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h2 class="page-header">Log</h2>
+            <p class="lead">List of recent activities (requests being mocked, mocks being modified).</p>
+
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Activity</th>
+                    <th>Request</th>
+                    <th>Mock</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="activity in activities" ng-switch="activity.type" ng-class="getActivityCSSClass(activity)">
+                    <td title="{{activity.date | date:'yyyy-MM-dd HH:mm:ss'}}">{{activity.date | date:'HH:mm:ss'}}</td>
+
+                    <td ng-switch-when="removed">
+                        Mock removed.
+                    </td>
+                    <td ng-switch-when="updated">
+                        Mock updated.
+                    </td>
+                    <td ng-switch-when="created">
+                        Mock created.
+                    </td>
+                    <td ng-switch-when="mocked">
+                        Request mocked.
+                    </td>
+                    <td ng-switch-when="not_found">
+                        Matching mock not found.
+                    </td>
+
+                    <td>
+                        <strong>{{activity.requestMethod}}</strong> <i>{{activity.requestURL}}</i>
+                    </td>
+                    <td>
+                        <a ui-sref="mock({id:activity.mockId})" ng-if="activity.mockId">Mock</a>
+                        <span ng-if="!activity.mockId">-</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
