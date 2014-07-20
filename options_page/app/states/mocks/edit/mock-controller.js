@@ -7,9 +7,11 @@ angular.module('optionsPage')
       templateUrl: 'states/mocks/edit/main-view.html'
     }));
   })
-  .controller('MockCtrl', function ($scope, $stateParams, MockRepository) {
+  .controller('MockCtrl', function ($scope, $state, $stateParams, MockRepository) {
     MockRepository.getMockById($stateParams.id).then(function (mock) {
       $scope.mock = mock;
+    }).catch(function() {
+      $state.go('error', {code: 404});
     });
 
     $scope.getDomain = function() {
