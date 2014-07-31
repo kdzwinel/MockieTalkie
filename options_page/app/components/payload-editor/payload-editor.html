@@ -7,6 +7,10 @@
         <button class="btn btn-xs btn-default" ng-click="undo()" tooltip="Undo"><i class="glyphicon glyphicon-chevron-left"></i></button>
         <button class="btn btn-xs btn-default" ng-click="redo()" tooltip="Redo"><i class="glyphicon glyphicon-chevron-right"></i></button>
         |
+        <span ng-show="(mode === 'json')">
+            <button class="btn btn-xs btn-default" ng-click="prettyPrint()" tooltip="Pretty print"><i class="glyphicon glyphicon-eye-open"></i></button>
+            |
+        </span>
         <select class="btn btn-xs btn-default" ng-model="mode">
             <option value="plain">Plain text</option>
             <option value="json">JSON</option>

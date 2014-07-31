@@ -1,3 +1,15 @@
 .activity-log-state  {
 
+  table {
+    table-layout: fixed;
+    word-wrap: break-word;
+
+    td, th {
+      width: 10%;
+    }
+
+    td.request_field, th.request_field {
+      width: 70%;
+    }
+  }
 }

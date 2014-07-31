@@ -39,6 +39,21 @@ angular.module('optionsPage.components')
       responseTextEditor.setOption('lineWrapping', $scope.lineWrap);
     };
 
+    $scope.prettyPrint = function() {
+      if($scope.mode === 'json') {
+        var jsonString = responseTextEditor.getValue();
+        var obj = null;
+
+        try {
+          obj = JSON.parse(jsonString);
+        } catch(e) {}
+
+        if(obj) {
+          responseTextEditor.setValue(JSON.stringify(obj, undefined, 2));
+        }
+      }
+    };
+
     $scope.undo = function() {
       responseTextEditor.undo();
     };
