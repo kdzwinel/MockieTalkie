@@ -50,60 +50,6 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     yeoman: yeomanConfig,
-    watch: {
-      coffee: {
-        files: ['<%= yeoman.app %>/scripts/**/*.coffee'],
-        tasks: ['coffee:dist']
-      },
-      coffeeTest: {
-        files: ['test/spec/**/*.coffee'],
-        tasks: ['coffee:test']
-      },
-      compass: {
-        files: ['<%= yeoman.app %>/styles/**/*.{scss,sass}', '<%= yeoman.app %>/components/**/*.{scss,sass}', '<%= yeoman.app %>/states/**/*.{scss,sass}'],
-        tasks: ['compass:server']
-      },
-      styles: {
-        files: ['<%= yeoman.app %>/styles/**/*.css'],
-        tasks: ['copy:styles']
-      },
-      livereload: {
-        options: {
-          livereload: '<%= connect.options.livereload %>'
-        },
-        files: [
-          '<%= yeoman.app %>/**/*.html',
-          '.tmp/styles/**/*.css',
-          '{.tmp,<%= yeoman.app %>}/scripts/**/*.js',
-          '<%= yeoman.app %>/assets/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
-        ]
-      },
-      sailslinker: {
-        files: ['<%= yeoman.app %>/**/*.{scss,sass,js}'],
-        tasks: ['linkAssets-dev']
-      }
-    },
-    connect: {
-      options: {
-        port: process.env.PORT || 9000,
-        hostname: process.env.IP || 'localhost',
-        livereload: 35729
-      },
-      livereload: {
-        options: {
-          open: true,
-          base: [
-            '.tmp',
-            '<%= yeoman.app %>'
-          ]
-        }
-      },
-      dist: {
-        options: {
-          base: '<%= yeoman.dist %>'
-        }
-      }
-    },
     clean: {
       dist: {
         files: [
@@ -118,34 +64,6 @@ module.exports = function (grunt) {
         ]
       },
       server: '.tmp'
-    },
-    coffee: {
-      options: {
-        sourceMap: true,
-        sourceRoot: ''
-      },
-      dist: {
-        files: [
-          {
-            expand: true,
-            cwd: '<%= yeoman.app %>/scripts',
-            src: '**/*.coffee',
-            dest: '.tmp/scripts',
-            ext: '.js'
-          }
-        ]
-      },
-      test: {
-        files: [
-          {
-            expand: true,
-            cwd: 'test/spec',
-            src: '**/*.coffee',
-            dest: '.tmp/spec',
-            ext: '.js'
-          }
-        ]
-      }
     },
     compass: {
       options: {
@@ -284,23 +202,15 @@ module.exports = function (grunt) {
     },
     concurrent: {
       server: [
-        'coffee:dist',
         'compass:server',
         'copy:styles'
       ],
       dist: [
-        'coffee',
         'compass:dist',
         'copy:styles',
         'imagemin',
         'htmlmin'
       ]
-    },
-    karma: {
-      unit: {
-        configFile: 'karma.conf.js',
-        singleRun: true
-      }
     },
     ngmin: {
       dist: {
@@ -422,34 +332,9 @@ module.exports = function (grunt) {
         gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d' // options to use with '$ git describe'
       }
     },
-    protractor: {
-      options: {
-        configFile: "protractor.conf.js",
-        keepAlive: false, // If false, the grunt process stops when the test fails.
-        noColor: false, // If true, protractor will not use colors in its output.
-        args: {
-          // Arguments passed to the command
-        }
-      }
-    },
-    'gh-pages': {
-      options: {
-        base: 'dist',
-        tag: 'v' + require('./bower.json').version,
-        message: 'Auto-generated build from v' + require('./bower.json').version
-      },
-      src: ['**']
-    },
-    changelog: {
-      options: {
-        dest: 'CHANGELOG.md',
-        versionFile: 'package.json'
-      }
-    },
-
     autoprefixer: {
       options: {
-        browsers: ['last 1 version']
+        browsers: ['last 2 Chrome versions']
       },
       dist: {
         files: [
@@ -461,59 +346,9 @@ module.exports = function (grunt) {
           }
         ]
       }
-    },
-
-    //TODO: The manifest file must be served with the MIME type text/cache-manifest.
-    manifest: {
-      generate: {
-        options: {
-          basePath: '/',
-          cache: ['/scripts/scripts.js', '/styles/main.css'],
-          network: ['*', 'http://*', 'https://*'],
-          fallback: ['/ /offline.html'], //TODO: Add an offline fallback page
-          exclude: ['js/jquery.min.js'],
-          preferOnline: true,
-          verbose: true,
-          timestamp: true,
-          hash: true,
-          master: ['index.html']
-        },
-        src: [ //TODO: Rev images, fonts, icons etc. to bust cache
-          '**/*.html',
-          '/scripts/**/*.js',
-          '/styles/**/*.css'//,
-          //'*.{ico,png,txt}',
-          //'assets/images/**/*',
-          //'assets/fonts/**/*'
-        ],
-        dest: 'manifest.appcache'
-      }
     }
 
   });
-
-  grunt.registerTask('server', function (target) {
-    if (target === 'dist') {
-      return grunt.task.run(['build', 'connect:dist:keepalive']);
-    }
-
-    grunt.task.run([
-      'clean:server',
-      'concurrent:server',
-      'autoprefixer',
-      'connect:livereload',
-      'linkAssets-dev',
-      'watch'
-    ]);
-  });
-
-  grunt.registerTask('test', [
-    'karma'
-  ]);
-
-  grunt.registerTask('test-e2e', [
-    'protractor'
-  ]);
 
   grunt.registerTask('build', function (target) {
 
@@ -529,21 +364,9 @@ module.exports = function (grunt) {
         'linkAssets-dev'
       ]);
     }
-    else if (target === 'prototype') {
-      console.log('Building using prototype profile');
-      grunt.task.run([
-        'clean',
-        'concurrent:server',
-        'autoprefixer',
-        'copy',
-        'linkAssets-dev'
-      ]);
-    }
     else {
       console.log('Building using production profile');
       grunt.task.run([
-        'test-e2e',
-        'test',
         'clean',
         'concurrent:dist',
         'autoprefixer',
@@ -556,19 +379,10 @@ module.exports = function (grunt) {
         'rev',
         'copy:indexHTML',
         'linkAssets-production',
-        'htmlmin'//,'manifest'
+        'htmlmin'
       ]);
     }
   });
-
-  grunt.registerTask('changelog', [
-    'changelog',
-    'bump'
-  ]);
-
-  grunt.registerTask('deploy', [
-    'gh-pages'
-  ]);
 
   grunt.registerTask('linkAssets-dev', [
     'sails-linker:devStyles',
@@ -581,7 +395,6 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('default', [
-    'test',
     'build'
   ]);
 };
