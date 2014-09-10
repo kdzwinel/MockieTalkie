@@ -22,7 +22,9 @@
     "scripts/injected.js"
   ],
   "browser_action": {
-    "default_icon": "images/icon-38.png",
+    "default_icon": {
+      "38": "images/icon-38.png"
+    },
     "default_title": "Start learning"
   },
   "options_page": "options_page/dist/index.html"

@@ -248,6 +248,13 @@ MockHttpRequest.prototype = {
     // Instances should override this.
   },
 
+  addEventListener: function () {
+    //TODO
+  },
+
+  removeEventListener: function() {
+    //TODO
+  },
 
   /*** Properties and methods for test interaction ***/
 
