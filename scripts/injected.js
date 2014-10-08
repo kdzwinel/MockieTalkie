@@ -49,7 +49,14 @@
   }
 
   function log(msg, data) {
-    console.log('%c## Mockie Talkie ##', 'font-weight: bold; background: -webkit-gradient(linear, 70% 0%, 0% 0%, from(#FF7816), to(#00A2B2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;', msg, data);
+    var mockieTalkie = '%c## Mockie Talkie ##',
+      styles = 'font-weight: bold; background: -webkit-gradient(linear, 70% 0%, 0% 0%, from(#FF7816), to(#00A2B2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;';
+
+    if(data) {
+      console.log(mockieTalkie, styles, msg, data);
+    } else {
+      console.log(mockieTalkie, styles, msg);
+    }
   }
 
   //inform about AJAX call
@@ -79,7 +86,7 @@
 
     request.receive(data.responseHTTPCode, data.responseText);
 
-    log('Request to "' + data.requestURL + '" mocked.', data);
+    log('Request to "' + data.requestURL + '" mocked.');
   }
 
   function passRequest(data) {
