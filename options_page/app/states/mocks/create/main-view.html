@@ -1,0 +1,19 @@
+<div class="mock-state container">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <ol class="breadcrumb">
+                <li><a ui-sref="index()">Mocks</a></li>
+                <li class="active">Create mock</li>
+            </ol>
+
+            <h2 class="page-header"><strong>{{mock.requestMethod}}</strong> {{mock.getURLPart('pathname')}}<span class="urlpath">{{mock.getURLPart('search')}}{{mock.getURLPart('hash')}}</span></h2>
+
+            <p class="lead">Create mock.</p>
+
+            <mock-form-component mock="mock"></mock-form-component>
+
+        </div>
+    </div>
+
+</div>

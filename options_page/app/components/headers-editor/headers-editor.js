@@ -3,6 +3,8 @@
 angular.module('optionsPage.components')
   .controller('headersEditorComponentCtrl', function ($scope) {
     $scope.addHeader = function () {
+      $scope.headers = $scope.headers || [];
+
       $scope.headers.push({
         name: '',
         value: ''

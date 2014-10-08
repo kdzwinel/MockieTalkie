@@ -33,7 +33,7 @@ angular.module('optionsPage')
     function getContentTypeFromHeaders(headers) {
       var type = null;
 
-      headers.forEach(function(header) {
+      headers && headers.forEach(function(header) {
         if((header.name).toLowerCase() === 'content-type') {
           var matches = (header.value).match('(json|html|javascript|xml)');
 
