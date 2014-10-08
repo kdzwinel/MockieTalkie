@@ -97,7 +97,8 @@
           requestURL: data.requestURL,
           responseHeaders: mock.responseHeaders,
           responseHTTPCode: mock.responseHTTPCode,
-          responseText: mock.responseText
+          responseText: mock.responseText,
+          mockEditURL: 'chrome-extension://' + chrome.runtime.id + '/options_page/dist/index.html#/mocks/edit/' + mock.id
         });
       }
     });

@@ -20,6 +20,10 @@
     .onMessage('start_mocking', startMocking)
     .onMessage('start_learning', startLearning)
     .onMessage('stop', stop);
+  var consoleOutput = {
+    logo: '%c## Mockie Talkie ##',
+    styles: 'font-weight: bold; background: -webkit-gradient(linear, 70% 0%, 0% 0%, from(#FF7816), to(#00A2B2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'
+  };
 
   function absoluteURL(url) {
     if(!url || url.substr(0,7) === 'http://' || url.substr(0,8) === 'https://') {
@@ -49,13 +53,10 @@
   }
 
   function log(msg, data) {
-    var mockieTalkie = '%c## Mockie Talkie ##',
-      styles = 'font-weight: bold; background: -webkit-gradient(linear, 70% 0%, 0% 0%, from(#FF7816), to(#00A2B2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;';
-
     if(data) {
-      console.log(mockieTalkie, styles, msg, data);
+      console.log(consoleOutput.logo, consoleOutput.styles, msg, data);
     } else {
-      console.log(mockieTalkie, styles, msg);
+      console.log(consoleOutput.logo, consoleOutput.styles, msg);
     }
   }
 
@@ -86,7 +87,10 @@
 
     request.receive(data.responseHTTPCode, data.responseText);
 
-    log('Request to "' + data.requestURL + '" mocked.');
+    console.groupCollapsed(consoleOutput.logo, consoleOutput.styles, 'Request mocked');
+    console.log('%cURL: ', 'font-weight: bold',  data.requestURL);
+    console.log('%cMock: ', 'font-weight: bold', data.mockEditURL);
+    console.groupEnd();
   }
 
   function passRequest(data) {
@@ -97,19 +101,19 @@
   }
 
   function startMocking() {
-    log('Start mocking.');
+    log('Started mocking!');
     ajaxServer.stop();
     ajaxServer.start();
   }
 
   function startLearning() {
-    log('Start learning.');
+    log('Started learning!');
     ajaxServer.stop();
     ajaxServer.passthrough();
   }
 
   function stop() {
-    log('Stop.');
+    log('Turned off.');
     ajaxServer.stop();
   }
 
