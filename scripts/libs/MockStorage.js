@@ -1,5 +1,10 @@
 "use strict";
 
+/**
+ * Despite its name, this storage is quite real. It just happens to store mocks.
+ * MockStorage is responsible for CRUD operations on stored mocks. It provides interface for searching matching mocks.
+ * @constructor
+ */
 function MockStorage() {
   var _mocks = [];
 

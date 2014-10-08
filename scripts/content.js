@@ -1,3 +1,7 @@
+/**
+ * Content script is responsible for injecting injected.js and its all dependencies and for mediation between
+ * injected script and background script.
+ */
 (function () {
   "use strict";
 

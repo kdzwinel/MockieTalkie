@@ -1,3 +1,6 @@
+/**
+ * Injected script runs in the context of the website, its main responsibility is to intercept all AJAX requests.
+ */
 (function(){
   "use strict";
 

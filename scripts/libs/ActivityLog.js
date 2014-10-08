@@ -1,5 +1,9 @@
 "use strict";
 
+/**
+ * Activity log is an interface for easy logging of all mock related events.
+ * @constructor
+ */
 function ActivityLog() {
   var _log = [];
   var _maxLength = 50;
