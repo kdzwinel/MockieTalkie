@@ -1,0 +1,17 @@
+body {
+    min-width: 200px;
+    padding: 10px 0;
+    min-height: 50px;
+}
+
+a:focus, button:focus, .btn:focus, .btn:active:focus, .btn.active:focus {
+    outline: 0;
+}
+
+#learn {
+    color: #00A2B2;
+}
+
+#mock {
+    color: #FF7816;
+}

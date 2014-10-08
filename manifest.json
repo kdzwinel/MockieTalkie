@@ -25,7 +25,8 @@
     "default_icon": {
       "38": "images/icon-38.png"
     },
-    "default_title": "Start learning"
+    "default_title": "Google Mail",
+    "default_popup": "popup/index.html"
   },
   "options_page": "options_page/dist/index.html"
 }
