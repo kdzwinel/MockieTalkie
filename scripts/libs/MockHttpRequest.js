@@ -26,6 +26,7 @@ function MockHttpRequest () {
   this.requestHeaders = {};
   this.responseHeaders = {};
 }
+
 MockHttpRequest.prototype = {
 
   statusReasons: {
@@ -191,8 +192,56 @@ MockHttpRequest.prototype = {
     }
     delete this.requestText;
     this.onreadystatechange();
+    this._triggerEvent('abort');
     this.onabort();
     this.readyState = this.UNSENT;
+  },
+
+  //https://dvcs.w3.org/hg/progress/raw-file/tip/Overview.html
+  _listeners: {
+    'progress': [],
+    'load': [],
+    'error': [],
+    'abort': []
+  },
+
+  _triggerEvent: function(type) {
+    var xhr = this;
+
+    this._listeners[type].forEach(function(listener) {
+      listener([{
+        target: xhr,
+        srcElement: xhr,
+        currentTarget: xhr,
+        type: type
+      }]);
+    });
+  },
+
+  addEventListener: function (type, listener) {
+    if(this._listeners[type] === undefined || typeof listener !== 'function') {
+      //unknown event or callback is not a function - failing silently
+      return;
+    }
+    if(this._listeners[type].indexOf(listener) !== -1) {
+      //do not add same listener multiple times
+      return;
+    }
+
+    this._listeners[type].push(listener);
+  },
+
+  removeEventListener: function(type, listener) {
+    if(this._listeners[type] === undefined || typeof listener !== 'function') {
+      //unknown event or callback is not a function - failing silently
+      return;
+    }
+
+    var idx = this._listeners[type].indexOf(listener);
+
+    if(idx !== -1) {
+      this._listeners[type].splice(idx, 1);
+    }
   },
 
 
@@ -246,14 +295,6 @@ MockHttpRequest.prototype = {
 
   onreadystatechange: function () {
     // Instances should override this.
-  },
-
-  addEventListener: function () {
-    //TODO
-  },
-
-  removeEventListener: function() {
-    //TODO
   },
 
   /*** Properties and methods for test interaction ***/
@@ -332,6 +373,7 @@ MockHttpRequest.prototype = {
     this.status = status;
     this.statusText = status + " " + this.statusReasons[status];
     this.readyState = this.HEADERS_RECEIVED;
+    this._triggerEvent('progress');
     this.onprogress();
     this.onreadystatechange();
 
@@ -339,12 +381,15 @@ MockHttpRequest.prototype = {
     this.responseXML = this.makeXMLResponse(data);
 
     this.readyState = this.LOADING;
+    this._triggerEvent('progress');
     this.onprogress();
     this.onreadystatechange();
 
     this.readyState = this.DONE;
     this.onreadystatechange();
+    this._triggerEvent('progress');
     this.onprogress();
+    this._triggerEvent('load');
     this.onload();
   },
 
@@ -365,6 +410,7 @@ MockHttpRequest.prototype = {
       throw exception;
     }
     this.onreadystatechange();
+    this._triggerEvent('error');
     this.onerror();
   },
 
@@ -450,14 +496,15 @@ function MockHttpServer (handler) {
   if (handler) {
     this.handle = handler;
   }
-};
+}
+
 MockHttpServer.prototype = {
 
   start: function () {
     var self = this;
 
     function Request () {
-      var orgReq = new OriginalHttpRequest();
+      var orgReq = new OriginalXMLHttpRequest();
 
       var orgOpen = this.open;
       this.open = function() {
@@ -493,7 +540,7 @@ MockHttpServer.prototype = {
     }
     Request.prototype = MockHttpRequest.prototype;
 
-    window.OriginalHttpRequest = window.XMLHttpRequest;
+    window.OriginalXMLHttpRequest = window.XMLHttpRequest;
     window.XMLHttpRequest = Request;
   },
 
@@ -501,7 +548,7 @@ MockHttpServer.prototype = {
     var self = this;
 
     function Request () {
-      var req = new OriginalHttpRequest();
+      var req = new OriginalXMLHttpRequest();
       req.addEventListener('load', function() {
         this.responseHeaders = {
           'content-type': this.getResponseHeader('content-type')
@@ -533,13 +580,13 @@ MockHttpServer.prototype = {
       return req;
     }
 
-    window.OriginalHttpRequest = window.XMLHttpRequest;
+    window.OriginalXMLHttpRequest = window.XMLHttpRequest;
     window.XMLHttpRequest = Request;
   },
 
   stop: function () {
-    if(window.OriginalHttpRequest) {
-      window.XMLHttpRequest = window.OriginalHttpRequest;
+    if(window.OriginalXMLHttpRequest) {
+      window.XMLHttpRequest = window.OriginalXMLHttpRequest;
     }
   },
 
