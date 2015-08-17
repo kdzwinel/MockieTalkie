@@ -18,7 +18,7 @@
     .onMessage('request_mock', mockRequest)
     .onMessage('request_pass', passRequest)
     .onMessage('start_mocking', startMocking)
-    .onMessage('start_learning', startLearning)
+    .onMessage('start_recording', startRecording)
     .onMessage('stop', stop);
   var consoleOutput = {
     logo: '%c## Mockie Talkie ##',
@@ -106,8 +106,8 @@
     ajaxServer.start();
   }
 
-  function startLearning() {
-    log('Started learning!');
+  function startRecording() {
+    log('Started recording!');
     ajaxServer.stop();
     ajaxServer.passthrough();
   }

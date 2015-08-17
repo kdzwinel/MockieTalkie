@@ -27,7 +27,7 @@
     .onMessage('request_captured', onRequestCaptured)
     .onMessage('injected_ready', onInjectedReady);
 
-  var learning = false;
+  var recording = false;
   var mocking = false;
 
   var injectedScriptReady = false;
@@ -58,8 +58,8 @@
   }
 
   function onRequestCaptured(data) {
-    if (learning) {
-      learnRequest(data);
+    if (recording) {
+      recordRequest(data);
     } else if (mocking) {
       mockRequest(data);
     }
@@ -104,7 +104,7 @@
     });
   }
 
-  function learnRequest(data) {
+  function recordRequest(data) {
     var json = JSON.stringify({
       message: 'save_mock',
       data: {
@@ -124,17 +124,17 @@
     });
   }
 
-  window.startLearning = function () {
-    if (learning) {
+  window.startRecording = function () {
+    if (recording) {
       return;
     }
 
     if (injectedScriptReady) {
       mocking = false;
-      learning = true;
-      eventServer.sendMessage('start_learning');
+      recording = true;
+      eventServer.sendMessage('start_recording');
     } else {
-      waitingOperation = startLearning;
+      waitingOperation = startRecording;
     }
   };
 
@@ -144,7 +144,7 @@
     }
 
     if (injectedScriptReady) {
-      learning = false;
+      recording = false;
       mocking = true;
       eventServer.sendMessage('start_mocking');
     } else {
@@ -153,7 +153,7 @@
   };
 
   window.stop = function () {
-    learning = false;
+    recording = false;
     mocking = false;
     if (injectedScriptReady) {
       eventServer.sendMessage('stop');

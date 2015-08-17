@@ -14,8 +14,8 @@
     changeStatus('mock');
   });
 
-  document.getElementById('learn').addEventListener('click', function () {
-    changeStatus('learn');
+  document.getElementById('record').addEventListener('click', function () {
+    changeStatus('record');
   });
 
   document.getElementById('stop').addEventListener('click', function () {

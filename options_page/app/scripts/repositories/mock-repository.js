@@ -12,7 +12,7 @@ angular.module('optionsPage')
     var MockRepository = function () {
       this._mocks = null;
 
-      // Load new mocks, added by the background page in the 'learning' process, without need to reload the page
+      // Load new mocks, added by the background page in the 'recording' process, without need to reload the page
       chrome.storage.onChanged.addListener(function(change, storage) {
         if(storage === 'local' && change.mocks && change.mocks.newValue) {
           var mocks = this._mocks;

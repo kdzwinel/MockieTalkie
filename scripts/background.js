@@ -15,17 +15,17 @@
     });
   }
 
-  function startLearning(tabId) {
-    attachedTabs[tabId] = 'learning';
+  function startRecording(tabId) {
+    attachedTabs[tabId] = 'recording';
 
-    chrome.tabs.executeScript(tabId, {code: 'startLearning()'});
+    chrome.tabs.executeScript(tabId, {code: 'startRecording()'});
 
     chrome.browserAction.setIcon({
       tabId: tabId, path: {
-        38: "images/icon-38-learning.png"
+        38: "images/icon-38-recording.png"
       }
     });
-    chrome.browserAction.setTitle({tabId: tabId, title: "Start mocking API callas"});
+    chrome.browserAction.setTitle({tabId: tabId, title: "MockieTalkie - Recording"});
   }
 
   function startMocking(tabId) {
@@ -38,7 +38,7 @@
         38: "images/icon-38-mocking.png"
       }
     });
-    chrome.browserAction.setTitle({tabId: tabId, title: "Stop"});
+    chrome.browserAction.setTitle({tabId: tabId, title: "MockieTalkie - Mocking"});
   }
 
   function stop(tabId) {
@@ -53,7 +53,7 @@
         38: "images/icon-38.png"
       }
     });
-    chrome.browserAction.setTitle({tabId: tabId, title: "Start learning API calls"});
+    chrome.browserAction.setTitle({tabId: tabId, title: "MockieTalkie"});
   }
 
   function tabUpdated(tabId, changeInfo, tab) {
@@ -63,8 +63,8 @@
 
     if (changeInfo.status === 'complete') {
       //re-inject the script if tab was reloaded or URL changed
-      if (attachedTabs[tabId] === 'learning') {
-        injectContentScripts(tab.id, startLearning);
+      if (attachedTabs[tabId] === 'recording') {
+        injectContentScripts(tab.id, startRecording);
       } else if (attachedTabs[tabId] === 'mocking') {
         injectContentScripts(tab.id, startMocking);
       }
@@ -125,13 +125,13 @@
     chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
       var tab = tabs[0];
 
-      if (status === 'learn') {
-        //we may need to inject content script before enabling learning
+      if (status === 'record') {
+        //we may need to inject content script before enabling recoding
         if (!attachedTabs[tab.id]) {
-          injectContentScripts(tab.id, startLearning);
+          injectContentScripts(tab.id, startRecording);
           chrome.tabs.onUpdated.addListener(tabUpdated);
         } else {
-          startLearning(tab.id);
+          startRecording(tab.id);
         }
       } else if (status === 'mock') {
         //we may need to inject content script before enabling mocking
