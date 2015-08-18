@@ -22,7 +22,7 @@
   }
 
   function blinkBadge(tabId) {
-    chrome.browserAction.setBadgeText({tabId: tabId, text: '·'});
+    chrome.browserAction.setBadgeText({tabId: tabId, text: '•'});
 
     setTimeout(function () {
       chrome.browserAction.setBadgeText({tabId: tabId, text: ''});
