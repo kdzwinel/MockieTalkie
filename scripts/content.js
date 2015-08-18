@@ -11,71 +11,51 @@
   }
   window.contentScriptInjected = true;
 
-  //We need to make sure that libraries load before the injected.js script
-  //TODO promises
-  //TODO allow libraries to load in parallel
-  //TODO check for errors
-  injectScript('scripts/libs/CustomEventServer.js', function () {
-    injectScript('scripts/libs/MockHttpRequest.js', function () {
-      injectScript('scripts/injected.js');
-    })
-  });
+  function injectScript(path) {
+    return new Promise(function(resolve, reject) {
+      var s = document.createElement('script');
+      s.src = chrome.extension.getURL(path);
+      (document.head || document.documentElement).appendChild(s);
+      s.onload = function () {
+        s.parentNode.removeChild(s);
+        resolve();
+      };
+      s.onerror = reject;
+    });
+  }
+
+  //Inject all scripts into the page, make sure that libraries are injected before injected.js
+  Promise.all([injectScript('scripts/libs/CustomEventServer.js'), injectScript('scripts/libs/MockHttpRequest.js')])
+    .then(injectScript('scripts/injected.js'))
+    .catch(function(e) {
+      throw new Error('Error injecting scripts into the page.', e);
+    });
 
   var eventServer = new CustomEventServer();
   eventServer
     .setPrefix('mockietalkie_')
-    .onMessage('request_captured', onRequestCaptured)
-    .onMessage('injected_ready', onInjectedReady);
+    .onMessage('request_captured', onRequestCaptured);
 
-  var recording = false;
-  var mocking = false;
+  var scriptsInjected = new Promise(function(resolve, reject) {
+    eventServer.onMessage('injected_ready', resolve);
+  });
 
-  var injectedScriptReady = false;
-  var waitingOperation = null;
+  const STOPPED = 'stopped';
+  const MOCKING = 'mocking';
+  const RECORDING = 'recording';
 
-  function injectScript(path, callback) {
-    var s = document.createElement('script');
-    s.src = chrome.extension.getURL(path);
-    (document.head || document.documentElement).appendChild(s);
-    s.onload = function () {
-      s.parentNode.removeChild(s);
-
-      if (callback) {
-        callback();
-      }
-    };
-  }
-
-  function log(msg, data) {
-    var mockieTalkie = '%c## Mockie Talkie ##',
-      styles = 'font-weight: bold; background: -webkit-gradient(linear, 70% 0%, 0% 0%, from(#FF7816), to(#00A2B2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;';
-
-    if(data) {
-      console.log(mockieTalkie, styles, msg, data);
-    } else {
-      console.log(mockieTalkie, styles, msg);
-    }
-  }
+  var status = STOPPED;
 
   function onRequestCaptured(data) {
-    if (recording) {
+    if (status === RECORDING) {
       recordRequest(data);
-    } else if (mocking) {
+    } else if (status === MOCKING) {
       mockRequest(data);
     }
   }
 
-  function onInjectedReady() {
-    injectedScriptReady = true;
-
-    if (waitingOperation) {
-      waitingOperation();
-      waitingOperation = null;
-    }
-  }
-
   function mockRequest(data) {
-    var json = JSON.stringify({
+    var message = {
       message: 'get_matching_mock',
       data: {
         requestMethod: data.method,
@@ -83,9 +63,9 @@
         requestHeaders: data.requestHeaders,
         requestText: data.requestText
       }
-    });
+    };
 
-    chrome.runtime.sendMessage(json, function (mock) {
+    chrome.runtime.sendMessage(message, function (mock) {
       if (!mock) {
         //log('Mock not found: ' + data.requestURL, data);
         eventServer.sendMessage('request_pass', {
@@ -105,7 +85,7 @@
   }
 
   function recordRequest(data) {
-    var json = JSON.stringify({
+    var message = {
       message: 'save_mock',
       data: {
         requestURL: data.requestURL,
@@ -117,48 +97,38 @@
         responseHeaders: data.responseHeaders || [],
         responseText: data.responseText
       }
-    });
+    };
 
-    chrome.runtime.sendMessage(json, function () {
-      //log('Learned: ', data.requestURL);
-    });
+    chrome.runtime.sendMessage(message, function () {});
   }
 
   window.startRecording = function () {
-    if (recording) {
+    if (status === RECORDING) {
       return;
     }
 
-    if (injectedScriptReady) {
-      mocking = false;
-      recording = true;
+    scriptsInjected.then(function() {
+      status = RECORDING;
       eventServer.sendMessage('start_recording');
-    } else {
-      waitingOperation = startRecording;
-    }
+    });
   };
 
   window.startMocking = function () {
-    if (mocking) {
+    if (status === MOCKING) {
       return;
     }
 
-    if (injectedScriptReady) {
-      recording = false;
-      mocking = true;
+    scriptsInjected.then(function() {
+      status = MOCKING;
       eventServer.sendMessage('start_mocking');
-    } else {
-      waitingOperation = startMocking;
-    }
+    });
   };
 
   window.stop = function () {
-    recording = false;
-    mocking = false;
-    if (injectedScriptReady) {
+    status = STOPPED;
+
+    scriptsInjected.then(function() {
       eventServer.sendMessage('stop');
-    } else {
-      waitingOperation = null;
-    }
+    });
   }
 })();

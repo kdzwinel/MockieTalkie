@@ -75,8 +75,6 @@
       return;
     }
 
-    request = JSON.parse(request);
-
     if (request.message === 'save_mock') {
       var mock = request.data;
       mockStorage.save(mock, function (mock, type) {
