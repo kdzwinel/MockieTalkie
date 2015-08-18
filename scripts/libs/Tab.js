@@ -111,8 +111,8 @@
 
   Tab.prototype.stop = function () {
     function stop() {
-      this._status = TAB.STOPPED;
-      chrome.tabs.executeScript(tabId, {code: 'stop()'});
+      this._status = Tab.STOPPED;
+      chrome.tabs.executeScript(this._id, {code: 'stop()'});
       this._trigger('stop');
     }
 
