@@ -1,79 +1,71 @@
 (function () {
   "use strict";
 
-  var attachedTabs = {};
+  var attachedTabs = new TabRepository();
 
-  function injectContentScripts(tabId, callback) {
-    chrome.tabs.executeScript(tabId, {
-      file: 'scripts/libs/CustomEventServer.js',
-      runAt: 'document_end'
-    }, function () {
-      chrome.tabs.executeScript(tabId, {
-        file: 'scripts/content.js',
-        runAt: 'document_end'
-      }, callback.bind(this, tabId));
+  function changeActionButton(tabId, title, icon, color) {
+    chrome.browserAction.setIcon({tabId: tabId, path: {38: icon}});
+    chrome.browserAction.setTitle({tabId: tabId, title: title});
+    chrome.browserAction.setBadgeBackgroundColor({tabId: tabId, color: color});
+  }
+
+  function startRecording(tab) {
+    changeActionButton(tab.getId(), "MockieTalkie - Recording", "images/icon-38-recording.png", '#00A2B2');
+  }
+
+  function startMocking(tab) {
+    changeActionButton(tab.getId(), "MockieTalkie - Mocking", "images/icon-38-mocking.png", '#FF7816');
+  }
+
+  function stop(tab) {
+    changeActionButton(tab.getId(), "MockieTalkie", "images/icon-38.png", '#000');
+  }
+
+  function blinkBadge(tabId) {
+    chrome.browserAction.setBadgeText({tabId: tabId, text: '·'});
+
+    setTimeout(function () {
+      chrome.browserAction.setBadgeText({tabId: tabId, text: ''});
+    }, 300);
+  }
+
+  function getCurrentTab() {
+    return new Promise(function (resolve, reject) {
+      chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve(tabs[0]);
+        }
+      });
     });
   }
 
-  function startRecording(tabId) {
-    attachedTabs[tabId] = 'recording';
+  //GETTING MESSAGES FROM POPUP
+  window.changeStatus = function (status) {
+    getCurrentTab().then(function (tab) {
+      var attachedTab = attachedTabs.find(tab.id);
 
-    chrome.tabs.executeScript(tabId, {code: 'startRecording()'});
+      if (!attachedTab) {
+        attachedTab = new Tab(tab.id);
+        attachedTab.on('stop', stop);
+        attachedTab.on('mock', startMocking);
+        attachedTab.on('record', startRecording);
 
-    chrome.browserAction.setIcon({
-      tabId: tabId, path: {
-        38: "images/icon-38-recording.png"
+        attachedTabs.add(attachedTab);
+      }
+
+      if (status === 'record') {
+        attachedTab.record();
+      } else if (status === 'mock') {
+        attachedTab.mock();
+      } else if (status === 'stop') {
+        attachedTab.stop();
       }
     });
-    chrome.browserAction.setTitle({tabId: tabId, title: "MockieTalkie - Recording"});
-  }
+  };
 
-  function startMocking(tabId) {
-    attachedTabs[tabId] = 'mocking';
-
-    chrome.tabs.executeScript(tabId, {code: 'startMocking()'});
-
-    chrome.browserAction.setIcon({
-      tabId: tabId, path: {
-        38: "images/icon-38-mocking.png"
-      }
-    });
-    chrome.browserAction.setTitle({tabId: tabId, title: "MockieTalkie - Mocking"});
-  }
-
-  function stop(tabId) {
-    attachedTabs[tabId] = undefined;
-
-    chrome.tabs.executeScript(tabId, {
-      code: 'stop()'
-    });
-
-    chrome.browserAction.setIcon({
-      tabId: tabId, path: {
-        38: "images/icon-38.png"
-      }
-    });
-    chrome.browserAction.setTitle({tabId: tabId, title: "MockieTalkie"});
-  }
-
-  function tabUpdated(tabId, changeInfo, tab) {
-    if (!attachedTabs[tabId]) {
-      return;
-    }
-
-    if (changeInfo.status === 'complete') {
-      //re-inject the script if tab was reloaded or URL changed
-      if (attachedTabs[tabId] === 'recording') {
-        injectContentScripts(tab.id, startRecording);
-      } else if (attachedTabs[tabId] === 'mocking') {
-        injectContentScripts(tab.id, startMocking);
-      }
-    }
-  }
-
-
-  //MESSAGING
-
+  //GETTING MESSAGES FROM CONTENT SCRIPT
   var activityLog = new ActivityLog();
   var mockStorage = new MockStorage();
 
@@ -90,6 +82,8 @@
       mockStorage.save(mock, function (mock, type) {
         if (type === 'create') {
           activityLog.mockCreated(mock);
+
+          blinkBadge(sender.tab.id);
         } else if (type === 'update') {
           activityLog.mockUpdated(mock);
         }
@@ -100,6 +94,8 @@
       mockStorage.match(request.data, function (mock) {
         if (mock) {
           activityLog.requestMocked(request.data, mock);
+
+          blinkBadge(sender.tab.id);
         } else {
           activityLog.mockNotFound(request.data);
         }
@@ -119,33 +115,4 @@
       response(mockStorage.getAll());
     }
   });
-
-  window.changeStatus = function (status) {
-    //first, we need to get current tab
-    chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-      var tab = tabs[0];
-
-      if (status === 'record') {
-        //we may need to inject content script before enabling recoding
-        if (!attachedTabs[tab.id]) {
-          injectContentScripts(tab.id, startRecording);
-          chrome.tabs.onUpdated.addListener(tabUpdated);
-        } else {
-          startRecording(tab.id);
-        }
-      } else if (status === 'mock') {
-        //we may need to inject content script before enabling mocking
-        if (!attachedTabs[tab.id]) {
-          injectContentScripts(tab.id, startMocking);
-          chrome.tabs.onUpdated.addListener(tabUpdated);
-        } else {
-          startMocking(tab.id);
-        }
-      } else if (status === 'stop') {
-        stop(tab.id);
-        chrome.tabs.onUpdated.removeListener(tabUpdated);
-      }
-
-    });
-  }
 })();
