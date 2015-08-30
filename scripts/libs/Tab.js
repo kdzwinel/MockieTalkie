@@ -5,7 +5,7 @@
     return new Promise(function (resolve, reject) {
       chrome.tabs.executeScript(tabId, {
         file: scriptURL,
-        runAt: 'document_end'
+        runAt: 'document_start'
       }, function () {
         if (chrome.runtime.lastError) {
           reject(chrome.runtime.lastError);
@@ -62,8 +62,6 @@
       //re-inject the script if tab was reloaded or URL changed
       this._init();
 
-      console.log(this._ready);
-
       if (this._status === Tab.RECORDING) {
         this.record();
       } else if (this._status === Tab.MOCKING) {
@@ -101,7 +99,6 @@
   Tab.prototype.mock = function () {
     function mock() {
       this._status = Tab.MOCKING;
-      console.log('startMocking()');
       chrome.tabs.executeScript(this._id, {code: 'startMocking()'});
       this._trigger('mock');
     }
