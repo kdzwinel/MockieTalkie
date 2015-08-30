@@ -1,18 +1,77 @@
 /**
  * Injected script runs in the context of the website, its main responsibility is to intercept all AJAX requests.
  */
-(function(){
+(function () {
   "use strict";
 
   //prevent multiple injections
-  if(window.mockieTalkieInjected) {
+  if (window.mockieTalkieInjected) {
     return;
   }
   window.mockieTalkieInjected = true;
 
-  var requests = {};
+  /**
+   * Helpers
+   */
+
+  var consoleOutput = {
+    logo: '%c## Mockie Talkie ##',
+    styles: 'font-weight: bold; background: -webkit-gradient(linear, 70% 0%, 0% 0%, from(#FF7816), to(#00A2B2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'
+  };
+
+  //http://davidwalsh.name/get-absolute-url
+  var getAbsoluteUrl = (function() {
+    var a;
+
+    return function(url) {
+      if(!a) a = document.createElement('a');
+      a.href = url;
+
+      return a.href;
+    };
+  })();
+
+  function objToArray(obj) {
+    return Object.keys(obj).map(function (key) {
+      return {
+        key: key,
+        value: obj[key]
+      }
+    });
+  }
+
+  function cloneObject(obj) {
+    return JSON.parse(JSON.stringify(obj));
+  }
+
+  //http://stackoverflow.com/a/105074/1143495
+  function guid() {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+      s4() + '-' + s4() + s4() + s4();
+  }
+
+  function log(msg, data) {
+    if (data) {
+      console.log(consoleOutput.logo, consoleOutput.styles, msg, data);
+    } else {
+      console.log(consoleOutput.logo, consoleOutput.styles, msg);
+    }
+  }
+
+  /**
+   * Main logic
+   */
+
+  var requests = new Map();
   var ajaxServer = new MockHttpServer();
   var eventServer = new CustomEventServer();
+
   eventServer
     .setPrefix('mockietalkie_')
     .onMessage('request_mock', mockRequest)
@@ -20,54 +79,15 @@
     .onMessage('start_mocking', startMocking)
     .onMessage('start_recording', startRecording)
     .onMessage('stop', stop);
-  var consoleOutput = {
-    logo: '%c## Mockie Talkie ##',
-    styles: 'font-weight: bold; background: -webkit-gradient(linear, 70% 0%, 0% 0%, from(#FF7816), to(#00A2B2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'
-  };
-
-  function absoluteURL(url) {
-    if(!url || url.substr(0,7) === 'http://' || url.substr(0,8) === 'https://') {
-      return url;
-    } else {
-      var absoluteURL = location.protocol + '//' + location.hostname;
-      absoluteURL += location.port ? (':' + location.port) : '';
-      absoluteURL += (url[0] !== '/') ? '/' : '';
-      absoluteURL += url;
-
-      return absoluteURL;
-    }
-  }
-
-  function objToArray(obj) {
-    var arr =[];
-    for( var name in obj ) {
-      if (obj.hasOwnProperty(name)){
-        arr.push({
-          name: name,
-          value: obj[name]
-        });
-      }
-    }
-
-    return arr;
-  }
-
-  function log(msg, data) {
-    if(data) {
-      console.log(consoleOutput.logo, consoleOutput.styles, msg, data);
-    } else {
-      console.log(consoleOutput.logo, consoleOutput.styles, msg);
-    }
-  }
 
   //inform about AJAX call
   ajaxServer.handle = function (request) {
-    request.requestId = Math.random();
-    requests[request.requestId] = request;
+    request.requestId = guid();
+    requests.set(request.requestId, request);
 
-    var clone = JSON.parse(JSON.stringify(request));
-    clone.requestURL = absoluteURL(clone.requestURL);
-    clone.responseURL = absoluteURL(clone.responseURL);
+    var clone = cloneObject(request);
+    clone.requestURL = clone.requestURL ? getAbsoluteUrl(clone.requestURL) : null;
+    clone.responseURL = clone.responseURL ? getAbsoluteUrl(clone.responseURL) : null;
     clone.requestHeaders = request.requestHeaders ? objToArray(request.requestHeaders) : [];
     clone.responseHeaders = request.responseHeaders ? objToArray(request.responseHeaders) : [];
 
@@ -76,11 +96,11 @@
 
   //respond to AJAX call
   function mockRequest(data) {
-    var request = requests[data.requestId];
-    requests[data.requestId] = undefined;
+    var request = requests.get(data.requestId);
+    requests.delete(data.requestId);
 
-    if(data.responseHeaders) {
-      (data.responseHeaders).forEach(function(header) {
+    if (data.responseHeaders) {
+      (data.responseHeaders).forEach(function (header) {
         request.setResponseHeader(header.name, header.value);
       });
     }
@@ -88,14 +108,14 @@
     request.receive(data.responseHTTPCode, data.responseText);
 
     console.groupCollapsed(consoleOutput.logo, consoleOutput.styles, 'Request mocked');
-    console.log('%cURL: ', 'font-weight: bold',  data.requestURL);
+    console.log('%cURL: ', 'font-weight: bold', data.requestURL);
     console.log('%cMock: ', 'font-weight: bold', data.mockEditURL);
     console.groupEnd();
   }
 
   function passRequest(data) {
-    var request = requests[data.requestId];
-    requests[data.requestId] = undefined;
+    var request = requests.get(data.requestId);
+    requests.delete(data.requestId);
 
     request.pass();
   }
