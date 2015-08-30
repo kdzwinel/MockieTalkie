@@ -34,14 +34,25 @@
   function objToArray(obj) {
     return Object.keys(obj).map(function (key) {
       return {
-        key: key,
+        name: key,
         value: obj[key]
       }
     });
   }
 
-  function cloneObject(obj) {
-    return JSON.parse(JSON.stringify(obj));
+  function cloneRequest(request) {
+    return {
+      method: request.method,
+      requestId: request.requestId,
+      requestURL: request.requestURL,
+      requestHeaders: request.requestHeaders,
+      requestText: request.requestText,
+      responseURL: request.responseURL,
+      responseHeaders: request.responseHeaders,
+      responseText: request.responseText,
+      status: request.status,
+      statusText: request.statusText
+    };
   }
 
   //http://stackoverflow.com/a/105074/1143495
@@ -85,7 +96,7 @@
     request.requestId = guid();
     requests.set(request.requestId, request);
 
-    var clone = cloneObject(request);
+    var clone = cloneRequest(request);
     clone.requestURL = clone.requestURL ? getAbsoluteUrl(clone.requestURL) : null;
     clone.responseURL = clone.responseURL ? getAbsoluteUrl(clone.responseURL) : null;
     clone.requestHeaders = request.requestHeaders ? objToArray(request.requestHeaders) : [];
