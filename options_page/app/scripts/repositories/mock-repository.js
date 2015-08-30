@@ -112,9 +112,9 @@ angular.module('optionsPage')
 
       if (!this._mocks) {
 
-        var json = JSON.stringify({
+        var json = {
           message: 'get_all_mocks'
-        });
+        };
 
         chrome.runtime.sendMessage(json, function (rawMocks) {
           this._mocks = rawMocks.map(function(rawMock){

@@ -61,10 +61,10 @@ angular.module('optionsPage')
       //Remove all properties prefixed with $
       for(var key in mock) if(key.substr(0,1) === '$') delete mock[key];
 
-      var json = JSON.stringify({
+      var json = {
         message: 'save_mock',
         data: mock
-      });
+      };
 
       chrome.runtime.sendMessage(json, function () {
         defer.resolve();
@@ -76,10 +76,10 @@ angular.module('optionsPage')
     MockModel.prototype.$delete = function() {
       var defer = $q.defer();
 
-      var json = JSON.stringify({
+      var json = {
         message: 'remove_mock',
         data: this.id
-      });
+      };
 
       chrome.runtime.sendMessage(json, function () {
         defer.resolve();
