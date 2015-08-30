@@ -71,7 +71,7 @@ module.exports = function (grunt) {
       },
       dist: {
         files: {
-          '<%= yeoman.dist %>/styles/main.css': '<%= yeoman.app %>/styles/main.scss'
+          '.tmp/styles/main.css': '<%= yeoman.app %>/styles/main.scss'
         }
       }
     },
