@@ -42,3 +42,8 @@ a {
 a:hover, a:focus {
   color: #005d66;
 }
+
+// libsass workaround (remove when https://github.com/sass/libsass/issues/1115 is resolved)
+.breadcrumb > li + li:before {
+  content: "/";
+}
