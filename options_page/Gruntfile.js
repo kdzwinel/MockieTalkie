@@ -65,24 +65,13 @@ module.exports = function (grunt) {
       },
       server: '.tmp'
     },
-    compass: {
+    sass: {
       options: {
-        sassDir: '<%= yeoman.app %>/styles',
-        cssDir: '.tmp/styles',
-        generatedImagesDir: '.tmp/assets/images/generated',
-        imagesDir: '<%= yeoman.app %>/assets/images',
-        javascriptsDir: '<%= yeoman.app %>/scripts',
-        fontsDir: '<%= yeoman.app %>/assets/fonts',
-        importPath: '<%= yeoman.app %>/bower_components',
-        httpImagesPath: '/assets/images',
-        httpGeneratedImagesPath: '/assets/images/generated',
-        httpFontsPath: '/assets/fonts',
-        relativeAssets: false
+        includePaths: ['<%= yeoman.app %>/bower_components']
       },
-      dist: {},
-      server: {
-        options: {
-          debugInfo: true
+      dist: {
+        files: {
+          '<%= yeoman.dist %>/styles/main.css': '<%= yeoman.app %>/styles/main.scss'
         }
       }
     },
@@ -202,11 +191,11 @@ module.exports = function (grunt) {
     },
     concurrent: {
       server: [
-        'compass:server',
+        'sass:dist',
         'copy:styles'
       ],
       dist: [
-        'compass:dist',
+        'sass:dist',
         'copy:styles',
         'imagemin',
         'htmlmin'
@@ -356,7 +345,7 @@ module.exports = function (grunt) {
       console.log('Building using development profile');
       grunt.task.run([
         'clean',
-        'compass:server',
+        'sass:dist',
         'autoprefixer',
         'copy:styles',
         'copy:tmpStyles2dist',
