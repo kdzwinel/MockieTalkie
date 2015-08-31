@@ -4,12 +4,18 @@
         <div class="col-lg-12">
             <ol class="breadcrumb">
                 <li><a ui-sref="index()">Mocks</a></li>
-                <li class="active">Create mock</li>
+                <li class="active">Create</li>
             </ol>
 
             <h2 class="page-header"><strong>{{mock.requestMethod}}</strong> {{mock.getURLPart('pathname')}}<span class="urlpath">{{mock.getURLPart('search')}}{{mock.getURLPart('hash')}}</span></h2>
 
-            <p class="lead">Create mock.</p>
+            <p class="lead">Create a mock.</p>
+
+            <p>
+                <button type="button" class="btn btn-default" ng-click="abort()">
+                    <span class="glyphicon glyphicon-ban-circle"></span> Abort
+                </button>
+            </p>
 
             <mock-form-component mock="mock"></mock-form-component>
 

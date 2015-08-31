@@ -66,7 +66,8 @@ angular.module('optionsPage')
         data: mock
       };
 
-      chrome.runtime.sendMessage(json, function () {
+      chrome.runtime.sendMessage(json, function (mock) {
+        this.id = mock.id;
         defer.resolve();
       }.bind(this));
 

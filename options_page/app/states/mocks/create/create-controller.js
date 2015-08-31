@@ -7,7 +7,12 @@ angular.module('optionsPage')
       templateUrl: 'states/mocks/create/main-view.html'
     }));
   })
-  .controller('CreateCtrl', function ($scope, MockModel) {
+  .controller('CreateCtrl', function ($scope, MockModel, MockRepository, $state) {
+    $scope.abort = function () {
+      MockRepository.delete($scope.mock);
+      $state.go('index');
+    };
+
     $scope.mock = new MockModel({
       requestMethod: 'GET',
       requestURL: 'http://example.com/',

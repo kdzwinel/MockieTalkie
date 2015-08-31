@@ -112,5 +112,8 @@
     } else if (request.message === 'get_all_mocks') {
       response(mockStorage.getAll());
     }
+
+    // this return statement has to be here for responses to work ( http://stackoverflow.com/q/20077487/1143495 )
+    return true;
   });
 })();
