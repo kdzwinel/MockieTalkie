@@ -9,7 +9,6 @@ angular.module('optionsPage')
   })
   .controller('MockCtrl', function ($scope, $state, $stateParams, MockRepository) {
     MockRepository.getMockById($stateParams.id).then(function (mock) {
-      debugger;
       $scope.mock = mock;
     }).catch(function() {
       $state.go('error', {code: 404});
