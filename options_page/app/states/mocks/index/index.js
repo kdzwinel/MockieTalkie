@@ -7,13 +7,17 @@ angular.module('optionsPage')
       templateUrl: 'states/mocks/index/main-view.html'
     }));
   })
-  .controller('IndexCtrl', function ($scope, $state, MockRepository) {
+  .controller('IndexCtrl', function ($scope, $state, MockRepository, MockExporter) {
     MockRepository.getDomains().then(function (domains) {
       $scope.domains = domains;
     });
 
     $scope.manageDomainMocks = function (domain) {
       $state.go('domain', {name: domain.name});
+    };
+
+    $scope.exportDomain = function (domain) {
+      MockExporter.exportDomain(domain);
     };
 
     $scope.removeDomain = function(domain) {

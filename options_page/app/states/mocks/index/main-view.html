@@ -9,6 +9,9 @@
                 <button type="button" class="btn btn-default" ui-sref="mocks_create()">
                     <span class="glyphicon glyphicon-plus-sign"></span> Create a new one
                 </button>
+                <button type="button" class="btn btn-default" ui-sref="mocks_import()">
+                    <span class="glyphicon glyphicon-import"></span> Import
+                </button>
             </p>
 
             <table class="table">
@@ -20,7 +23,7 @@
                         <td ui-sref="domain({name:domain.name})">{{domain.name}}</td>
                         <td ui-sref="domain({name:domain.name})">{{domain.count}}</td>
                         <td>
-                            <button type="button" class="btn btn-default btn-xs">
+                            <button type="button" class="btn btn-default btn-xs" ng-click="exportDomain(domain)">
                                 <span class="glyphicon glyphicon-export"></span> Export
                             </button>
                             <button type="button" class="btn btn-danger btn-xs" ng-click="removeDomain(domain)">
